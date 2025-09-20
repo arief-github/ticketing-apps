@@ -1,7 +1,9 @@
+import { Ticket } from "@prisma/client";
 import clsx from "clsx";
-import { SquareArrowOutUpRight } from "lucide-react";
+import { SquareArrowOutUpRight, TrashIcon } from "lucide-react";
 import Link from "next/link";
 
+import { deleteTicket } from "@/app/tickets/actions/delete-ticket";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -11,14 +13,18 @@ import {
 } from '@/components/ui/card'
 
 import { TICKET_ICONS } from "../constants";
-import { TicketTypes } from "../types";
 
 type TicketItemProps = {
-    ticket: TicketTypes,
+    ticket: Ticket,
     isDetail?: boolean
 }
 
 export const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
+    // use handler while server actions applied to client components
+    // const handleDeleteTicket = async () => {
+    //     await deleteTicket(ticket.id)
+    // }
+
     const detailButton = (
         <Button asChild variant='outline' size='icon'>
             <Link
@@ -29,6 +35,14 @@ export const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
                 <SquareArrowOutUpRight className="h-4 w-4" />
             </Link>
         </Button>
+    )
+
+    const deleteButton = (
+        <form action={deleteTicket.bind(null, ticket.id)}>
+            <Button variant='outline' size='icon'>
+                <TrashIcon className="h-4 w-4" />
+            </Button>
+        </form>
     )
 
     return (
@@ -53,11 +67,9 @@ export const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
                 </CardContent>
             </Card>
             {
-                isDetail ? null : (
-                    <div className="flex flex-col gap-y-1">
-                        {detailButton}
-                    </div>
-                )
+                <div className="flex flex-col gap-y-1">
+                    {isDetail ? deleteButton : detailButton}
+                </div>
             }
         </div>
     )
