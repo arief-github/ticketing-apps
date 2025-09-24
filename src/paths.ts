@@ -1,5 +1,5 @@
 const ticketsPath = (): string => '/tickets'
-const ticketPath = (ticketId: string): string => `/ticket/${ticketId}`
+const ticketPath = (ticketId: string): string => `/tickets/${ticketId}`
 const homePath = (): string => '/'
 
 export {

@@ -11,6 +11,7 @@ import {
     CardHeader,
     CardTitle
 } from '@/components/ui/card'
+import { ticketPath } from "@/paths";
 
 import { TICKET_ICONS } from "../constants";
 
@@ -29,7 +30,8 @@ export const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
         <Button asChild variant='outline' size='icon'>
             <Link
                 key={ticket.id}
-                href={`/tickets/${ticket.id}`}
+                prefetch={true}
+                href={ticketPath(ticket.id)}
                 className="text-sm underline"
             >
                 <SquareArrowOutUpRight className="h-4 w-4" />

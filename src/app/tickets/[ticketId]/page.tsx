@@ -3,13 +3,7 @@ import { getTicket } from "@/features/ticket/queries/get-ticket";
 
 import NotFound from "./not-found";
 
-type TicketDetailProps = {
-    params: {
-        ticketId: string;
-    };
-}
-
-const TicketDetailsPage = async ({ params }: TicketDetailProps) => {
+const TicketDetailsPage = async ({ params }: { params: Promise<{ ticketId: string }> }) => {
     const { ticketId } = await params;
     const ticket = await getTicket(ticketId)
     if (!ticket) {
