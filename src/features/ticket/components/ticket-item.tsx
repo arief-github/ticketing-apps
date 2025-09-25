@@ -1,6 +1,6 @@
 import { Ticket } from "@prisma/client";
 import clsx from "clsx";
-import { SquareArrowOutUpRight, TrashIcon } from "lucide-react";
+import { Pencil, SquareArrowOutUpRight, TrashIcon } from "lucide-react";
 import Link from "next/link";
 
 import { deleteTicket } from "@/app/tickets/actions/delete-ticket";
@@ -11,7 +11,7 @@ import {
     CardHeader,
     CardTitle
 } from '@/components/ui/card'
-import { ticketPath } from "@/paths";
+import { ticketEditPath, ticketPath } from "@/paths";
 
 import { TICKET_ICONS } from "../constants";
 
@@ -21,11 +21,6 @@ type TicketItemProps = {
 }
 
 export const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
-    // use handler while server actions applied to client components
-    // const handleDeleteTicket = async () => {
-    //     await deleteTicket(ticket.id)
-    // }
-
     const detailButton = (
         <Button asChild variant='outline' size='icon'>
             <Link
@@ -35,6 +30,14 @@ export const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
                 className="text-sm underline"
             >
                 <SquareArrowOutUpRight className="h-4 w-4" />
+            </Link>
+        </Button>
+    )
+
+    const editButton = (
+        <Button variant='outline' size='icon' asChild>
+            <Link prefetch href={ticketEditPath(ticket.id)}>
+                <Pencil className="h-4 w-4" />
             </Link>
         </Button>
     )
@@ -70,7 +73,17 @@ export const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
             </Card>
             {
                 <div className="flex flex-col gap-y-1">
-                    {isDetail ? deleteButton : detailButton}
+                    {isDetail ? (
+                        <>
+                            {editButton}
+                            {deleteButton}
+                        </>
+                    ) : (
+                        <>
+                            {detailButton}
+                            {editButton}
+                        </>
+                    )}
                 </div>
             }
         </div>
