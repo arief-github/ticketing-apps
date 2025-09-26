@@ -5,7 +5,6 @@ const homePath = (): string => '/'
 
 export {
     homePath,
+    ticketEditPath,
     ticketPath,
-    ticketsPath,
-    ticketEditPath
-}
+    ticketsPath}
