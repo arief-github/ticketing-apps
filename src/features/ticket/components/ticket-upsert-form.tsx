@@ -8,16 +8,14 @@ import { SubmitButton } from "@/components/shared/SubmitButton";
 import { Input } from '@/components/ui/input';
 import { Label } from "@/components/ui/label";
 import { Textarea } from "@/components/ui/textarea";
+import { EMPTY_ACTION_STATE } from "@/utils/to-action-state";
 
 type TicketUpdateFormProps = {
     ticket?: Ticket
 }
 
 export const TicketUpsertForm = ({ ticket }: TicketUpdateFormProps) => {
-    const [actionState, action] = useActionState(upsertTicket.bind(null, ticket?.id), {
-        message: "",
-        fieldErrors: {}
-    })
+    const [actionState, action] = useActionState(upsertTicket.bind(null, ticket?.id), EMPTY_ACTION_STATE)
 
     return (
         <form action={action} className="flex flex-col gap-y-2">

@@ -6,7 +6,7 @@ import { redirect } from "next/navigation"
 import { prisma } from "@/lib/prisma"
 import { ticketPath, ticketsPath } from "@/paths"
 import { z } from 'zod';
-import { fromErrorToActionState } from "@/utils/to-action-state"
+import { fromErrorToActionState, toActionState } from "@/utils/to-action-state"
 
 const upsertTicketSchema = z.object({
     title: z.string().min(1).max(191),
@@ -37,5 +37,5 @@ export const upsertTicket = async (ticketId: string | undefined, _actionState: {
         redirect(ticketPath(ticketId))
     }
 
-    return { message: "Ticket Successfully Created", fieldErrors: {} }
+    return toActionState("SUCCESS", "Ticket Created Successfully")
 }
