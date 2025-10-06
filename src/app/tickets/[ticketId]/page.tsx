@@ -1,4 +1,3 @@
-import { RedirectToast } from "@/components/shared/RedirectToast";
 import { TicketItem } from "@/features/ticket/components/ticket-item";
 import { getTicket } from "@/features/ticket/queries/get-ticket";
 
@@ -12,12 +11,9 @@ const TicketDetailsPage = async ({ params }: { params: Promise<{ ticketId: strin
     }
 
     return (
-        <>
-            <div className="flex justify-center animate-fade-in-from-top">
-                <TicketItem ticket={ticket} isDetail={true} />
-            </div>
-            <RedirectToast />
-        </>
+        <div className="flex justify-center animate-fade-in-from-top">
+            <TicketItem ticket={ticket} isDetail={true} />
+        </div>
     )
 }
 
