@@ -4,7 +4,7 @@ import {
     Pencil,
 } from 'lucide-react'
 
-import { TicketStatus } from './types'
+type TicketStatus = "OPEN" | "IN_PROGRESS" | "DONE"
 
 type TicketIconsType = { [key in TicketStatus]: React.ReactNode }
 
