@@ -8,10 +8,12 @@ import { Button } from "@/components/ui/button";
 import {
     Card,
     CardContent,
+    CardFooter,
     CardHeader,
     CardTitle
 } from '@/components/ui/card'
 import { ticketEditPath, ticketPath } from "@/paths";
+import { toCurrencyFromCent } from "@/utils/currency";
 
 import { TICKET_ICONS } from "../constants";
 
@@ -70,6 +72,11 @@ export const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
                         "line-clamp-3": !isDetail
                     })}>{ticket.content}</span>
                 </CardContent>
+                <CardFooter className="flex justify-between">
+                    <p className="text-sm text-muted-foreground">
+                        {toCurrencyFromCent(ticket.bounty)}
+                    </p>
+                </CardFooter>
             </Card>
             {
                 <div className="flex flex-col gap-y-1">
