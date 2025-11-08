@@ -25,3 +25,22 @@ enum TicketStatus {
     IN_PROGRESS
     DONE
 }
+
+// Define user schema
+model User {
+    id           String @id @default(cuid())
+    username     String @unique
+    email        String @unique
+    passwordHash String
+
+    sessions Session[]
+}
+
+model Session {
+    id        String @id
+    expiresAt String
+    userId    String
+    user      User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
+}
