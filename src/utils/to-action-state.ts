@@ -18,7 +18,7 @@ export const toActionState = (status: ActionState['status'], message: string): A
     return { status, message, fieldErrors: {}, timestamp: Date.now() }
 }
 
-export const fromErrorToActionState = (error: unknown, formData: FormData): ActionState => {
+export const fromErrorToActionState = (error: unknown, formData?: FormData): ActionState => {
     // error instance from zodError
     if (error instanceof ZodError) {
         const flatten = error.flatten((issue) => issue.message)
