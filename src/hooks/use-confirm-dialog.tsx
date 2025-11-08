@@ -1,10 +1,7 @@
 "use client";
 import { cloneElement, useActionState, useState } from "react";
-import { cloneElement, useActionState, useState } from "react";
 
 import { Form } from "@/components/shared/Form";
-import { Form } from "@/components/shared/Form";
-import { SubmitButton } from "@/components/shared/SubmitButton";
 import { SubmitButton } from "@/components/shared/SubmitButton";
 import {
   AlertDialog,
@@ -32,7 +29,6 @@ const useConfirmDialog = ({
   trigger,
 }: useConfirmDialogProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
-  const [actionState, formAction] = useActionState(action, EMPTY_ACTION_STATE);
   const [actionState, formAction] = useActionState(action, EMPTY_ACTION_STATE);
 
   const dialogTrigger = cloneElement(trigger, {
