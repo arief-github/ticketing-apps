@@ -6,16 +6,17 @@ import { toast } from "sonner";
 
 import { deleteTicket } from "@/app/tickets/actions/delete-ticket";
 import { updateTicketStatus } from "@/app/tickets/actions/update-ticket-status";
-import { ConfirmDialog } from "@/components/shared/ConfirmDialog";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
+  DropdownMenuItem,
   DropdownMenuRadioGroup,
   DropdownMenuRadioItem,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu";
+import { useConfirmDialog } from "@/hooks/use-confirm-dialog";
 
 import { TICKET_STATUS_LABEL } from "../constants";
 
@@ -25,6 +26,18 @@ type TicketMenuProps = {
 };
 
 const TicketMoreMenu = ({ ticket, trigger }: TicketMenuProps) => {
+  const [deleteButton, deleteDialog] = useConfirmDialog({
+    action: deleteTicket.bind(null, ticket.id),
+    trigger: (
+      <div className="flex gap-2 items-center">
+        <Button variant="outline" size="icon" title="Delete">
+          <TrashIcon className="h-4 w-4" />
+        </Button>
+        <span>Delete</span>
+      </div>
+    ),
+  });
+
   const handleUpdateTicketStatus = async (value: string) => {
     const result = await updateTicketStatus(ticket.id, value as TicketStatus);
 
@@ -34,20 +47,6 @@ const TicketMoreMenu = ({ ticket, trigger }: TicketMenuProps) => {
       toast.success(result.message);
     }
   };
-
-  const deleteButton = (
-    <ConfirmDialog
-      action={deleteTicket.bind(null, ticket.id)}
-      trigger={
-        <div className="flex gap-2 items-center">
-          <Button variant="outline" size="icon" title="Delete">
-            <TrashIcon className="h-4 w-4" />
-          </Button>
-          <span>Delete</span>
-        </div>
-      }
-    />
-  );
 
   const ticketStatusRadioGroupItems = (
     <DropdownMenuRadioGroup
@@ -63,14 +62,18 @@ const TicketMoreMenu = ({ ticket, trigger }: TicketMenuProps) => {
   );
 
   return (
-    <DropdownMenu>
-      <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
-      <DropdownMenuContent className="w-56" side="right">
-        {ticketStatusRadioGroupItems}
-        <DropdownMenuSeparator />
-        {deleteButton}
-      </DropdownMenuContent>
-    </DropdownMenu>
+    <>
+      {deleteDialog}
+
+      <DropdownMenu>
+        <DropdownMenuTrigger asChild>{trigger}</DropdownMenuTrigger>
+        <DropdownMenuContent className="w-56" side="right">
+          {ticketStatusRadioGroupItems}
+          <DropdownMenuSeparator />
+          {deleteButton}
+        </DropdownMenuContent>
+      </DropdownMenu>
+    </>
   );
 };
 
