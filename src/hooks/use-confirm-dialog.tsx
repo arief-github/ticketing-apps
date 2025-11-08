@@ -1,7 +1,10 @@
 "use client";
 import { cloneElement, useActionState, useState } from "react";
+import { cloneElement, useActionState, useState } from "react";
 
 import { Form } from "@/components/shared/Form";
+import { Form } from "@/components/shared/Form";
+import { SubmitButton } from "@/components/shared/SubmitButton";
 import { SubmitButton } from "@/components/shared/SubmitButton";
 import {
   AlertDialog,
@@ -13,7 +16,6 @@ import {
   AlertDialogHeader,
   AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
-import { Button } from "@/components/ui/button";
 import { ActionState, EMPTY_ACTION_STATE } from "@/utils/to-action-state";
 
 type useConfirmDialogProps = {
@@ -31,6 +33,7 @@ const useConfirmDialog = ({
 }: useConfirmDialogProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [actionState, formAction] = useActionState(action, EMPTY_ACTION_STATE);
+  const [actionState, formAction] = useActionState(action, EMPTY_ACTION_STATE);
 
   const dialogTrigger = cloneElement(trigger, {
     onClick: () => setIsOpen((state) => !state),
@@ -46,6 +49,9 @@ const useConfirmDialog = ({
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction asChild>
+            <Form action={formAction} actionState={actionState}>
+              <SubmitButton label="Confirm" />
+            </Form>
             <Form action={formAction} actionState={actionState}>
               <SubmitButton label="Confirm" />
             </Form>
