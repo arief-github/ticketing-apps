@@ -1,9 +1,8 @@
 import { Ticket } from "@prisma/client";
 import clsx from "clsx";
-import { MoreVertical, Pencil, SquareArrowOutUpRight, TrashIcon } from "lucide-react";
+import { MoreVertical, Pencil, SquareArrowOutUpRight } from "lucide-react";
 import Link from "next/link";
 
-import { deleteTicket } from "@/app/tickets/actions/delete-ticket";
 import { Button } from "@/components/ui/button";
 import {
     Card,
@@ -45,14 +44,6 @@ export const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
         </Button>
     )
 
-    const deleteButton = (
-        <form action={deleteTicket.bind(null, ticket.id)}>
-            <Button variant='outline' size='icon'>
-                <TrashIcon className="h-4 w-4" />
-            </Button>
-        </form>
-    )
-
     const triggerButton = (
         <Button variant='outline' size='icon'>
             <MoreVertical className="h-4 w-4" />
@@ -92,7 +83,6 @@ export const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
                     {isDetail ? (
                         <>
                             {editButton}
-                            {deleteButton}
                             {moreMenu}
                         </>
                     ) : (
