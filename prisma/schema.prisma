@@ -33,7 +33,8 @@ model User {
     email        String @unique
     passwordHash String
 
-    sessions Session[]
+    sessions            Session[]
+    passwordResetTokens PasswordResetToken[]
 }
 
 model Session {
@@ -41,6 +42,16 @@ model Session {
     expiresAt DateTime
     userId    String
     user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
+}
+
+model PasswordResetToken {
+    id        String   @id @default(cuid())
+    token     String   @unique
+    userId    String
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    expiresAt DateTime
 
     @@index([userId])
 }
