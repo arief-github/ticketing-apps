@@ -19,7 +19,11 @@ const ForgotPasswordPage = () => {
   return (
     <Form action={action} actionState={actionState}>
       <Label htmlFor="email">Email</Label>
-      <Input name="email" placeholder="Enter your email" />
+      <Input
+        name="email"
+        placeholder="Enter your email"
+        defaultValue={actionState.payload?.get("email") as string}
+      />
       <FieldError actionState={actionState} name="email" />
 
       <SubmitButton label="Send Reset Link" />

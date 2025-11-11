@@ -39,6 +39,6 @@ export async function requestPasswordReset(_actionState: ActionState, formData: 
         return toActionState("SUCCESS", "If that account exists, check your email")
 
     } catch(error) {
-        return fromErrorToActionState(error)
+        return fromErrorToActionState(error, formData)
     }
 }

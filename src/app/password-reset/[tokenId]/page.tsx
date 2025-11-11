@@ -26,7 +26,12 @@ const PasswordResetPage = ({
     <Form action={action} actionState={actionState}>
       <Input type="hidden" name="tokenId" value={tokenId} />
       <Label htmlFor="password">New Password</Label>
-      <Input type="password" name="password" placeholder="New Password" />
+      <Input
+        type="password"
+        name="password"
+        placeholder="New Password"
+        defaultValue={actionState.payload?.get("password") as string}
+      />
       <FieldError actionState={actionState} name="password" />
       <SubmitButton label="Reset Password" />
     </Form>

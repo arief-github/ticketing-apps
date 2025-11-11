@@ -43,7 +43,7 @@ export const signIn = async (_actionState: ActionState, formData: FormData) => {
         )
 
     } catch(error) { 
-        return fromErrorToActionState(error)
+        return fromErrorToActionState(error, formData)
     }
 
     redirect(ticketsPath())

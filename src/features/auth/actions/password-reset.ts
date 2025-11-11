@@ -23,7 +23,7 @@ export async function resetPassword(_actionState: ActionState, formData: FormDat
 
         const passwordHash = await hash(password)
 
-        await prisma.$transaction([
+         await prisma.$transaction([
             prisma.user.update({
                 where: { id: reset.userId },
                 data: { passwordHash }
@@ -33,6 +33,6 @@ export async function resetPassword(_actionState: ActionState, formData: FormDat
 
         return toActionState("SUCCESS", "Password successfully reset!")
     } catch(error) {
-        return fromErrorToActionState(error)
+        return fromErrorToActionState(error, formData)
     }
 }
