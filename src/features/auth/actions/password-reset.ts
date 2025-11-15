@@ -15,8 +15,12 @@ export async function resetPassword(_actionState: ActionState, formData: FormDat
     try {
         const { token, password } = schema.parse(Object.fromEntries(formData))
 
+        console.log("Incoming Token", token)
+
         const reset = await prisma.passwordResetToken.findUnique({ where: { token } })
 
+        console.log("Token Record", reset)
+ 
         if(!reset || reset.expiresAt < new Date()) {
             return toActionState("ERROR", "Invalid or Expired token")
         }
@@ -31,8 +35,11 @@ export async function resetPassword(_actionState: ActionState, formData: FormDat
             prisma.passwordResetToken.delete({ where: { id: reset.id }})
         ])
 
+        console.log("Transaction Completed")
+
         return toActionState("SUCCESS", "Password successfully reset!")
     } catch(error) {
+        console.log("Reset Password Error", error)
         return fromErrorToActionState(error, formData)
     }
 }
