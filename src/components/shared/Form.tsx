@@ -23,6 +23,8 @@ const Form = ({ action, actionState, children, onSuccess, onError }: FormProps) 
         onError: ({ actionState }) => {
             if (actionState.message) {
                 toast.error(actionState.message)
+            } else if (Object.keys(actionState.fieldErrors).length > 0) {
+                toast.error("Please check the form for errors")
             }
 
             onError?.(actionState)

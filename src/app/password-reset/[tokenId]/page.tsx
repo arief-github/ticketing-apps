@@ -31,7 +31,7 @@ const PasswordResetPage = ({
         className="w-full max-w-[420px] animate-fade-in-from-top"
         content={
           <Form action={action} actionState={actionState}>
-            <Input type="hidden" name="tokenId" value={tokenId} />
+            <Input type="hidden" name="token" value={tokenId} />
             <Label htmlFor="password">New Password</Label>
             <Input
               type="password"
