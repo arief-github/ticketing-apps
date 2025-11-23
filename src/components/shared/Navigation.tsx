@@ -1,12 +1,18 @@
 import { Tickets } from "lucide-react";
+import { LogOut } from "lucide-react";
 import Link from "next/link";
 
+import { signOut } from "@/features/auth/actions/sign-out";
+import { getAuth } from "@/features/auth/queries/get-auth";
 import { homePath, signInPath, signUpPath, ticketsPath } from "@/paths";
 
 import { ThemeSwitcher } from "../theme/theme-switcher";
 import { buttonVariants } from "../ui/button";
+import { SubmitButton } from "./SubmitButton";
 
-const Navigation = () => {
+const Navigation = async () => {
+  const { user } = await getAuth();
+
   return (
     <nav
       className="
@@ -22,25 +28,35 @@ const Navigation = () => {
       </Link>
       <div className="flex items-center gap-x-1.5">
         <ThemeSwitcher />
-        <Link
-          href={ticketsPath()}
-          className={buttonVariants({ variant: "default" })}
-        >
-          Tickets
-        </Link>
-        <Link
-          href={signUpPath()}
-          className={buttonVariants({ variant: "outline" })}
-        >
-          Sign Up
-        </Link>
+        {user ? (
+          <>
+            <Link
+              href={ticketsPath()}
+              className={buttonVariants({ variant: "default" })}
+            >
+              Tickets
+            </Link>
+            <form action={signOut}>
+              <SubmitButton label="Sign Out" icon={<LogOut />} />
+            </form>
+          </>
+        ) : (
+          <>
+            <Link
+              href={signUpPath()}
+              className={buttonVariants({ variant: "outline" })}
+            >
+              Sign Up
+            </Link>
 
-        <Link
-          href={signInPath()}
-          className={buttonVariants({ variant: "outline" })}
-        >
-          Sign In
-        </Link>
+            <Link
+              href={signInPath()}
+              className={buttonVariants({ variant: "outline" })}
+            >
+              Sign In
+            </Link>
+          </>
+        )}
       </div>
     </nav>
   );

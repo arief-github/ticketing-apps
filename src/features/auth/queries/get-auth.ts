@@ -3,10 +3,10 @@ import { cache } from "react";
 
 import { lucia } from "@/lib/lucia";
 
-export const getAuth = cache(async() => {
+export const getAuth = cache(async () => {
     const sessionId = cookies().get(lucia.sessionCookieName)?.value ?? null;
 
-    if(!sessionId) {
+    if (!sessionId) {
         return {
             user: null,
             session: null
@@ -16,7 +16,7 @@ export const getAuth = cache(async() => {
     const result = await lucia.validateSession(sessionId)
 
     try {
-        if(result.session && result.session.fresh) {
+        if (result.session && result.session.fresh) {
             const sessionCookie = lucia.createSessionCookie(result.session.id)
 
             cookies().set(
@@ -26,7 +26,7 @@ export const getAuth = cache(async() => {
             )
         }
 
-        if(!result.session) {
+        if (!result.session) {
             const sessionCookie = lucia.createBlankSessionCookie();
             cookies().set(
                 sessionCookie.name,
@@ -39,4 +39,5 @@ export const getAuth = cache(async() => {
         // do nothing if used in a RSC
     }
 
+    return result
 })
