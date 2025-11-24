@@ -3,12 +3,12 @@
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { z } from 'zod';
-import { setCookieByKey } from "@/app/actions";
 
+import { setCookieByKey } from "@/app/actions";
 import { prisma } from "@/lib/prisma"
 import { ticketPath, ticketsPath } from "@/paths"
-import { fromErrorToActionState, toActionState } from "@/utils/to-action-state"
 import { toCent } from "@/utils/currency";
+import { fromErrorToActionState, toActionState } from "@/utils/to-action-state"
 
 const upsertTicketSchema = z.object({
     title: z.string().min(1).max(191),
@@ -36,8 +36,8 @@ export const upsertTicket = async (ticketId: string | undefined, _actionState: {
             where: {
                 id: ticketId || "",
             },
-            update: data,
-            create: data
+            update: dbData,
+            create: dbData
         })
     } catch (error) {
         return fromErrorToActionState(error, formData)

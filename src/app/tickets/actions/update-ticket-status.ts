@@ -2,9 +2,10 @@
 
 import { TicketStatus } from "@prisma/client"
 import { revalidatePath } from "next/cache"
-import { fromErrorToActionState, toActionState } from '@/utils/to-action-state'
+
 import { prisma } from "@/lib/prisma"
 import { ticketsPath } from "@/paths"
+import { fromErrorToActionState, toActionState } from '@/utils/to-action-state'
 
 export const updateTicketStatus = async (id: string, status: TicketStatus) => {
     try {
