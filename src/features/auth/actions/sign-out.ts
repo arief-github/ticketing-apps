@@ -6,7 +6,7 @@ import { redirect } from "next/navigation"
 import { lucia } from "@/lib/lucia"
 import { signInPath } from "@/paths"
 
-import { getAuth } from "../queries/get-auth"
+import { getAuth } from "./get-auth"
 
 export const signOut = async () => {
     const { session } = await getAuth()
