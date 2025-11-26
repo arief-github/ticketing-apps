@@ -3,12 +3,13 @@
 import { revalidatePath } from "next/cache"
 import { redirect } from "next/navigation"
 import { z } from 'zod';
-import { setCookieByKey } from "@/app/actions";
 
+import { setCookieByKey } from "@/app/actions";
+import { getAuth } from "@/features/auth/actions/get-auth";
 import { prisma } from "@/lib/prisma"
 import { ticketPath, ticketsPath } from "@/paths"
-import { fromErrorToActionState, toActionState } from "@/utils/to-action-state"
 import { toCent } from "@/utils/currency";
+import { fromErrorToActionState, toActionState } from "@/utils/to-action-state"
 
 const upsertTicketSchema = z.object({
     title: z.string().min(1).max(191),
@@ -32,12 +33,18 @@ export const upsertTicket = async (ticketId: string | undefined, _actionState: {
             bounty: toCent(data.bounty)
         }
 
+        // Get authenticated user for creating new tickets
+        const { user } = await getAuth();
+
         await prisma.ticket.upsert({
             where: {
                 id: ticketId || "",
             },
-            update: data,
-            create: data
+            update: dbData,
+            create: {
+                ...dbData,
+                userId: user?.id || ""
+            }
         })
     } catch (error) {
         return fromErrorToActionState(error, formData)

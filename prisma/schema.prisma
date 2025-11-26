@@ -8,6 +8,24 @@ datasource db {
     directUrl = env("DIRECT_URL")
 }
 
+enum TicketStatus {
+    OPEN
+    IN_PROGRESS
+    DONE
+}
+
+// Define user schema
+model User {
+    id           String @id @default(cuid())
+    username     String @unique
+    email        String @unique
+    passwordHash String
+
+    sessions            Session[]
+    passwordResetTokens PasswordResetToken[]
+    tickets             Ticket[]
+}
+
 // Defining Model Ticket
 model Ticket {
     id        String       @id @default(cuid())
@@ -18,10 +36,27 @@ model Ticket {
     status    TicketStatus @default(OPEN)
     bounty    Int          @default(0)
     deadline  String       @default("2025-10-13")
+    userId    String
+    user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
 }
 
-enum TicketStatus {
-    OPEN
-    IN_PROGRESS
-    DONE
+model Session {
+    id        String   @id
+    expiresAt DateTime
+    userId    String
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+
+    @@index([userId])
+}
+
+model PasswordResetToken {
+    id        String   @id @default(cuid())
+    token     String   @unique
+    userId    String
+    user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
+    expiresAt DateTime
+
+    @@index([userId])
 }
