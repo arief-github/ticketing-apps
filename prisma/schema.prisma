@@ -37,7 +37,7 @@ model Ticket {
     bounty    Int          @default(0)
     deadline  String       @default("2025-10-13")
     userId    String
-    user      User         @relation(fields: [userId], references: [id])
+    user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
 
     @@index([userId])
 }
