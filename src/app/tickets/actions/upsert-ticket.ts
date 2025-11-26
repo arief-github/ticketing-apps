@@ -5,6 +5,7 @@ import { redirect } from "next/navigation"
 import { z } from 'zod';
 
 import { setCookieByKey } from "@/app/actions";
+import { getAuth } from "@/features/auth/actions/get-auth";
 import { prisma } from "@/lib/prisma"
 import { ticketPath, ticketsPath } from "@/paths"
 import { toCent } from "@/utils/currency";
@@ -32,12 +33,18 @@ export const upsertTicket = async (ticketId: string | undefined, _actionState: {
             bounty: toCent(data.bounty)
         }
 
+        // Get authenticated user for creating new tickets
+        const { user } = await getAuth();
+
         await prisma.ticket.upsert({
             where: {
                 id: ticketId || "",
             },
             update: dbData,
-            create: dbData
+            create: {
+                ...dbData,
+                userId: user?.id || ""
+            }
         })
     } catch (error) {
         return fromErrorToActionState(error, formData)

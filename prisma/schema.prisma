@@ -8,18 +8,6 @@ datasource db {
     directUrl = env("DIRECT_URL")
 }
 
-// Defining Model Ticket
-model Ticket {
-    id        String       @id @default(cuid())
-    createdAt DateTime     @default(now())
-    updatedAt DateTime     @updatedAt
-    title     String
-    content   String       @db.VarChar(1024)
-    status    TicketStatus @default(OPEN)
-    bounty    Int          @default(0)
-    deadline  String       @default("2025-10-13")
-}
-
 enum TicketStatus {
     OPEN
     IN_PROGRESS
@@ -35,6 +23,23 @@ model User {
 
     sessions            Session[]
     passwordResetTokens PasswordResetToken[]
+    tickets             Ticket[]
+}
+
+// Defining Model Ticket
+model Ticket {
+    id        String       @id @default(cuid())
+    createdAt DateTime     @default(now())
+    updatedAt DateTime     @updatedAt
+    title     String
+    content   String       @db.VarChar(1024)
+    status    TicketStatus @default(OPEN)
+    bounty    Int          @default(0)
+    deadline  String       @default("2025-10-13")
+    userId    String
+    user      User         @relation(fields: [userId], references: [id])
+
+    @@index([userId])
 }
 
 model Session {
