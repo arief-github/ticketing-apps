@@ -20,7 +20,11 @@ import { TicketMoreMenu } from "./ticket-more-menu";
 type TicketItemProps = {
   ticket: Prisma.TicketGetPayload<{
     include: {
-      user: true;
+      user: {
+        select: {
+          username: true;
+        };
+      };
     };
   }>;
   isDetail?: boolean;

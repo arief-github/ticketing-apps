@@ -7,7 +7,11 @@ export const getTickets = async () => {
             createdAt: "desc"
         },
         include: {
-            user: true
+            user: {
+                select: {
+                    username: true
+                }
+            }
         }
     })
 }
