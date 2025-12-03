@@ -42,8 +42,6 @@ export const signIn = async (_actionState: ActionState, formData: FormData) => {
             sessionCookie.attributes
         )
 
-        return toActionState("SUCCESS", "Sign in successful", formData)
-
     } catch(error) { 
         return fromErrorToActionState(error, formData)
     }
