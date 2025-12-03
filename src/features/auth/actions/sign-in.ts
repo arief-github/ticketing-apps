@@ -24,13 +24,13 @@ export const signIn = async (_actionState: ActionState, formData: FormData) => {
         })
 
         if(!user) {
-            return toActionState("ERROR", "Incorrect email or password")
+            return toActionState("ERROR", "Incorrect email or password", formData)
         }
 
         const validPassword = await verify(user.passwordHash, password)
 
         if(!validPassword) {
-            return toActionState("ERROR", "Incorrect email or password")
+            return toActionState("ERROR", "Incorrect email or password", formData)
         }
 
         const session = await lucia.createSession(user.id, {})
@@ -41,6 +41,8 @@ export const signIn = async (_actionState: ActionState, formData: FormData) => {
             sessionCookie.value,
             sessionCookie.attributes
         )
+
+        return toActionState("SUCCESS", "Sign in successful", formData)
 
     } catch(error) { 
         return fromErrorToActionState(error, formData)

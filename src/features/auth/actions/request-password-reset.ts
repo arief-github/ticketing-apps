@@ -18,7 +18,7 @@ export async function requestPasswordReset(_actionState: ActionState, formData: 
         const user = await prisma.user.findUnique({ where: { email } })
 
         if(!user) {
-            return toActionState("SUCCESS", "if that account exists, check your email")
+            return toActionState("SUCCESS", "if that account exists, check your email", formData)
         }
 
         const token = randomBytes(32).toString("hex")
@@ -36,7 +36,7 @@ export async function requestPasswordReset(_actionState: ActionState, formData: 
             text: `Reset your password here ${resetUrl}` 
         })
 
-        return toActionState("SUCCESS", "If that account exists, check your email")
+        return toActionState("SUCCESS", "If that account exists, check your email", formData)
 
     } catch(error) {
         return fromErrorToActionState(error, formData)

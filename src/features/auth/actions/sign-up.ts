@@ -53,5 +53,5 @@ export const signUp = async (_actionState: ActionState, formData: FormData) => {
         return fromErrorToActionState(error, formData)
     }
 
-    return toActionState("SUCCESS", "Sign Up successful")
+    return toActionState("SUCCESS", "Sign Up successful", formData)
 }
