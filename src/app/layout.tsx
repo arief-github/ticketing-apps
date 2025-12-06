@@ -6,6 +6,7 @@ import { Toaster } from "sonner";
 
 import Navigation from "@/components/shared/Navigation";
 import { RedirectToast } from "@/components/shared/RedirectToast";
+import Sidebar from "@/components/shared/sidebar/components/sidebar";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });
@@ -25,9 +26,12 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider>
           <Navigation />
-          <main className="min-h-screen flex-1 overflow-y-auto overflow-x-hidden py-24 px-8 bg-secondary/20 flex flex-col">
-            {children}
-          </main>
+          <div className="flex h-screen overflow-hidden border-collapse">
+            <Sidebar />
+            <main className="min-h-screen flex-1 overflow-y-auto overflow-x-hidden py-24 px-8 bg-secondary/20 flex flex-col">
+              {children}
+            </main>
+          </div>
           <Toaster expand />
           <RedirectToast />
         </ThemeProvider>
