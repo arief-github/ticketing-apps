@@ -1,17 +1,21 @@
-import Link from "next/link";
+import { Suspense } from "react";
 
 import Heading from "@/components/shared/Heading";
-import { buttonVariants } from "@/components/ui/button";
+import Spinner from "@/components/shared/Spinner";
+import { TicketList } from "@/features/ticket/components/ticket-list";
 
 export default function Home() {
   return (
     <div className="flex-1 flex flex-col gap-y-8">
-      <Heading title="Home Page" description="Hallo, Happy Ticketing" />
+      <Heading
+        title="All Tickets"
+        description="Tickets by everyone at one place"
+      />
 
       <div className="flex-1 flex flex-col items-center">
-        <Link href={`/tickets`} className={buttonVariants({ variant: 'outline' })}>
-          Go to Tickets Page
-        </Link>
+        <Suspense fallback={<Spinner />}>
+          <TicketList />
+        </Suspense>
       </div>
     </div>
   );
