@@ -11,6 +11,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { getAuth } from "@/features/auth/actions/get-auth";
+import { isOwner } from "@/features/auth/utils/is-owner";
 import { ticketEditPath, ticketPath } from "@/paths";
 import { toCurrencyFromCent } from "@/utils/currency";
 
@@ -30,7 +32,10 @@ type TicketItemProps = {
   isDetail?: boolean;
 };
 
-export const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
+export const TicketItem = async ({ ticket, isDetail }: TicketItemProps) => {
+  const { user } = await getAuth();
+  const isTicketOwner = isOwner({ user, entity: ticket });
+
   const detailButton = (
     <Button asChild variant="outline" size="icon">
       <Link
@@ -44,13 +49,13 @@ export const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
     </Button>
   );
 
-  const editButton = (
+  const editButton = isTicketOwner ? (
     <Button variant="outline" size="icon" asChild>
       <Link prefetch href={ticketEditPath(ticket.id)}>
         <Pencil className="h-4 w-4" />
       </Link>
     </Button>
-  );
+  ) : null;
 
   const triggerButton = (
     <Button variant="outline" size="icon">
@@ -58,7 +63,9 @@ export const TicketItem = ({ ticket, isDetail }: TicketItemProps) => {
     </Button>
   );
 
-  const moreMenu = <TicketMoreMenu ticket={ticket} trigger={triggerButton} />;
+  const moreMenu = isTicketOwner ? (
+    <TicketMoreMenu ticket={ticket} trigger={triggerButton} />
+  ) : null;
 
   return (
     <div

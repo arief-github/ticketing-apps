@@ -22,7 +22,7 @@ export async function resetPassword(_actionState: ActionState, formData: FormDat
         console.log("Token Record", reset)
  
         if(!reset || reset.expiresAt < new Date()) {
-            return toActionState("ERROR", "Invalid or Expired token")
+            return toActionState("ERROR", "Invalid or Expired token", formData)
         }
 
         const passwordHash = await hash(password)
@@ -37,7 +37,7 @@ export async function resetPassword(_actionState: ActionState, formData: FormDat
 
         console.log("Transaction Completed")
 
-        return toActionState("SUCCESS", "Password successfully reset!")
+        return toActionState("SUCCESS", "Password successfully reset!", formData)
     } catch(error) {
         console.log("Reset Password Error", error)
         return fromErrorToActionState(error, formData)
