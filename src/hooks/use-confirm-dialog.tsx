@@ -48,9 +48,6 @@ const useConfirmDialog = ({
             <Form action={formAction} actionState={actionState}>
               <SubmitButton label="Confirm" />
             </Form>
-            <Form action={formAction} actionState={actionState}>
-              <SubmitButton label="Confirm" />
-            </Form>
           </AlertDialogAction>
         </AlertDialogFooter>
       </AlertDialogContent>
