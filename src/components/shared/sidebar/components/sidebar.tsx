@@ -2,12 +2,14 @@
 
 import { useState } from "react";
 
+import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
 
 import { sidebarItems } from "../constants";
 import { SidebarItem } from "./sidebar-item";
 
 const Sidebar = () => {
+  const { user, isFetched } = useAuth();
   const [isTransition, setIsTransition] = useState(false);
   const [isOpen, setIsOpen] = useState(false);
 
@@ -16,6 +18,11 @@ const Sidebar = () => {
     setIsOpen(open);
     setTimeout(() => setIsTransition(false), 200);
   };
+
+  if (!user || !isFetched) {
+    // return <div className="w-[78px] bg-secondary/20" />;
+    return null;
+  }
 
   return (
     <aside
