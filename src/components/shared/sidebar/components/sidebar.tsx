@@ -5,6 +5,7 @@ import { useState } from "react";
 
 import { useAuth } from "@/hooks/use-auth";
 import { cn } from "@/lib/utils";
+import { signInPath, signUpPath } from "@/paths";
 import { getActivePath } from "@/utils/use-active-path";
 
 import { sidebarItems } from "../constants";
@@ -19,6 +20,7 @@ const Sidebar = () => {
   const { activeIndex } = getActivePath({
     path: pathname,
     paths: sidebarItems.map((item) => item.href),
+    ignorePaths: [signInPath(), signUpPath()],
   });
 
   const handleToogle = (open: boolean) => {
