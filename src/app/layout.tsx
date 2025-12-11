@@ -4,9 +4,9 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 
-import Navigation from "@/components/shared/Navigation";
+import Navigation from "@/app/_navigation/Navigation";
+import Sidebar from "@/app/_navigation/sidebar/components/sidebar";
 import { RedirectToast } from "@/components/shared/RedirectToast";
-import Sidebar from "@/components/shared/sidebar/components/sidebar";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 
 const inter = Inter({ subsets: ["latin"] });

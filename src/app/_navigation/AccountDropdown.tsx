@@ -2,10 +2,8 @@ import { User as AuthUser } from "lucia";
 import { LucideLock, LucideLogOut, LucideUser } from "lucide-react";
 import Link from "next/link";
 
-import { signOut } from "@/features/auth/actions/sign-out";
-import { accountPasswordPath, accountProfilePath } from "@/paths";
-
-import { Avatar, AvatarFallback } from "../ui/avatar";
+import { SubmitButton } from "@/components/shared/SubmitButton";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -13,8 +11,9 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from "../ui/dropdown-menu";
-import { SubmitButton } from "./SubmitButton";
+} from "@/components/ui/dropdown-menu";
+import { signOut } from "@/features/auth/actions/sign-out";
+import { accountPasswordPath, accountProfilePath } from "@/paths";
 
 type AccountDropdownProps = {
   user: AuthUser;

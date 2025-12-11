@@ -6,8 +6,8 @@ import Link from "next/link";
 import { useAuth } from "@/hooks/use-auth";
 import { homePath, signInPath, signUpPath } from "@/paths";
 
-import { ThemeSwitcher } from "../theme/theme-switcher";
-import { buttonVariants } from "../ui/button";
+import { ThemeSwitcher } from "../../components/theme/theme-switcher";
+import { buttonVariants } from "../../components/ui/button";
 import { AccountDropdown } from "./AccountDropdown";
 
 const Navigation = () => {
