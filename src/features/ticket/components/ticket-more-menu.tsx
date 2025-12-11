@@ -4,8 +4,8 @@ import { Ticket, TicketStatus } from "@prisma/client";
 import { TrashIcon } from "lucide-react";
 import { toast } from "sonner";
 
-import { deleteTicket } from "@/app/tickets/actions/delete-ticket";
-import { updateTicketStatus } from "@/app/tickets/actions/update-ticket-status";
+import { deleteTicket } from "@/app/(authenticated)/tickets/actions/delete-ticket";
+import { updateTicketStatus } from "@/app/(authenticated)/tickets/actions/update-ticket-status";
 import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,

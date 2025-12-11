@@ -1,21 +1,39 @@
 "use client";
 
 import { Tickets } from "lucide-react";
-import { LogOut } from "lucide-react";
 import Link from "next/link";
 
-import { signOut } from "@/features/auth/actions/sign-out";
 import { useAuth } from "@/hooks/use-auth";
-import { homePath, signInPath, signUpPath, ticketsPath } from "@/paths";
+import { homePath, signInPath, signUpPath } from "@/paths";
 
 import { ThemeSwitcher } from "../theme/theme-switcher";
 import { buttonVariants } from "../ui/button";
-import { SubmitButton } from "./SubmitButton";
+import { AccountDropdown } from "./AccountDropdown";
 
 const Navigation = () => {
   const { user, isFetched } = useAuth();
 
   if (!isFetched) return null;
+
+  const navItems = user ? (
+    <AccountDropdown user={user} />
+  ) : (
+    <>
+      <Link
+        href={signUpPath()}
+        className={buttonVariants({ variant: "outline" })}
+      >
+        Sign Up
+      </Link>
+
+      <Link
+        href={signInPath()}
+        className={buttonVariants({ variant: "outline" })}
+      >
+        Sign In
+      </Link>
+    </>
+  );
 
   return (
     <nav
@@ -33,35 +51,7 @@ const Navigation = () => {
       </Link>
       <div className="flex items-center gap-x-1.5">
         <ThemeSwitcher />
-        {user ? (
-          <>
-            <Link
-              href={ticketsPath()}
-              className={buttonVariants({ variant: "default" })}
-            >
-              Tickets
-            </Link>
-            <form action={signOut}>
-              <SubmitButton label="Sign Out" icon={<LogOut />} />
-            </form>
-          </>
-        ) : (
-          <>
-            <Link
-              href={signUpPath()}
-              className={buttonVariants({ variant: "outline" })}
-            >
-              Sign Up
-            </Link>
-
-            <Link
-              href={signInPath()}
-              className={buttonVariants({ variant: "outline" })}
-            >
-              Sign In
-            </Link>
-          </>
-        )}
+        {navItems}
       </div>
     </nav>
   );
