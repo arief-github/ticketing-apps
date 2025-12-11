@@ -3,8 +3,13 @@ import { Suspense } from "react";
 import Heading from "@/components/shared/Heading";
 import Spinner from "@/components/shared/Spinner";
 import { TicketList } from "@/features/ticket/components/ticket-list";
+import { SearchParams } from "@/features/ticket/constants";
 
-export default function Home() {
+type HomepageProps = {
+  searchParams: SearchParams;
+};
+
+export default function Home({ searchParams }: HomepageProps) {
   return (
     <div className="flex-1 flex flex-col gap-y-8">
       <Heading
@@ -14,7 +19,7 @@ export default function Home() {
 
       <div className="flex-1 flex flex-col items-center">
         <Suspense fallback={<Spinner />}>
-          <TicketList />
+          <TicketList searchParams={searchParams} />
         </Suspense>
       </div>
     </div>
