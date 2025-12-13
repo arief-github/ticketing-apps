@@ -1,9 +1,9 @@
 import { prisma } from "@/lib/prisma"
 
-import { SearchParams } from "../constants"
+import { ParsedSearchParams } from "../constants"
 import buildOrderBy from "./helpers/build-order-by"
 
-export const getTickets = async (userId: string | undefined, searchParams: SearchParams) => {
+export const getTickets = async (userId: string | undefined, searchParams: ParsedSearchParams) => {
     return await prisma.ticket.findMany({
         where: {
             userId,
