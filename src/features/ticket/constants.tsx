@@ -18,5 +18,6 @@ export const TICKET_STATUS_LABEL: TicketIconstLabel = {
 };
 
 export type SearchParams = {
-  search: string;
+  search: string | string[] | undefined;
+  sort: string | string[] | undefined;
 };

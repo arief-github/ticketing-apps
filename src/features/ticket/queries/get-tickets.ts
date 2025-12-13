@@ -1,20 +1,20 @@
 import { prisma } from "@/lib/prisma"
 
 import { SearchParams } from "../constants"
+import buildOrderBy from "./helpers/build-order-by"
 
-// simulation of fetching API, i'm inserting setTimeout
 export const getTickets = async (userId: string | undefined, searchParams: SearchParams) => {
     return await prisma.ticket.findMany({
         where: {
             userId,
-            title: {
-                contains: searchParams.search,
-                mode: "insensitive"
-            }
+            ...(typeof searchParams.search === "string" && {
+                   title: {
+                    contains: searchParams.search,
+                    mode: "insensitive"
+                }
+            })
         },
-        orderBy: {
-            createdAt: "desc"
-        },
+        orderBy: buildOrderBy(searchParams.sort),
         include: {
             user: {
                 select: {
