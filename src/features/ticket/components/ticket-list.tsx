@@ -2,13 +2,13 @@ import Placeholder from "@/components/shared/Placeholder";
 import SearchInput from "@/components/shared/SearchInput";
 import SortSelect from "@/components/shared/SortSelect";
 
-import { SearchParams } from "../constants";
+import { ParsedSearchParams } from "../constants";
 import { getTickets } from "../queries/get-tickets";
 import { TicketItem } from "./ticket-item";
 
 type TicketListProps = {
   userId?: string | undefined;
-  searchParams: SearchParams;
+  searchParams: ParsedSearchParams;
 };
 
 export const TicketList = async ({ userId, searchParams }: TicketListProps) => {
