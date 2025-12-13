@@ -5,8 +5,12 @@ const homePath = (): string => '/'
 const signInPath = (): string => '/sign-in' 
 const signUpPath = (): string => '/sign-up'
 const forgotPasswordPath =  (): string => '/forgot-password'
+const accountProfilePath = (): string => '/account/profile'
+const accountPasswordPath = (): string => '/account/password'
 
 export {
+    accountPasswordPath,
+    accountProfilePath,
     forgotPasswordPath,
     homePath,
     signInPath,

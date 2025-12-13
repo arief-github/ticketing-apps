@@ -6,8 +6,13 @@ import Spinner from "@/components/shared/Spinner";
 import { getAuth } from "@/features/auth/actions/get-auth";
 import { TicketList } from "@/features/ticket/components/ticket-list";
 import { TicketUpsertForm } from "@/features/ticket/components/ticket-upsert-form";
+import { SearchParams } from "@/features/ticket/constants";
 
-const TicketsPage = async () => {
+type TicketsPageProps = {
+  searchParams: SearchParams;
+};
+
+const TicketsPage = async ({ searchParams }: TicketsPageProps) => {
   const { user } = await getAuth();
 
   return (
@@ -25,7 +30,7 @@ const TicketsPage = async () => {
       />
 
       <Suspense fallback={<Spinner />}>
-        <TicketList userId={user?.id} />
+        <TicketList userId={user?.id} searchParams={searchParams} />
       </Suspense>
     </div>
   );

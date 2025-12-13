@@ -4,7 +4,8 @@ import type { Metadata } from "next";
 import { Inter } from "next/font/google";
 import { Toaster } from "sonner";
 
-import Navigation from "@/components/shared/Navigation";
+import Navigation from "@/app/_navigation/Navigation";
+import Sidebar from "@/app/_navigation/sidebar/components/sidebar";
 import { RedirectToast } from "@/components/shared/RedirectToast";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 
@@ -25,9 +26,12 @@ export default function RootLayout({
       <body className={inter.className}>
         <ThemeProvider>
           <Navigation />
-          <main className="min-h-screen flex-1 overflow-y-auto overflow-x-hidden py-24 px-8 bg-secondary/20 flex flex-col">
-            {children}
-          </main>
+          <div className="flex h-screen overflow-hidden border-collapse">
+            <Sidebar />
+            <main className="min-h-screen flex-1 overflow-y-auto overflow-x-hidden py-24 px-8 bg-secondary/20 flex flex-col">
+              {children}
+            </main>
+          </div>
           <Toaster expand />
           <RedirectToast />
         </ThemeProvider>
