@@ -1,6 +1,6 @@
-import { LucideBook, LucideLibrary } from "lucide-react";
+import { LucideBook, LucideCircleUser, LucideLibrary } from "lucide-react";
 
-import { homePath, ticketsPath } from "@/paths";
+import { accountProfilePath, homePath, ticketsPath } from "@/paths";
 
 import { SidebarItem } from "./types";
 
@@ -14,6 +14,12 @@ export const sidebarItems: SidebarItem[] = [
     title: "My Tickets",
     href: ticketsPath(),
     icon: <LucideBook />,
+  },
+  {
+    separator: true,
+    title: "Account",
+    href: accountProfilePath(),
+    icon: <LucideCircleUser />,
   },
 ];
 
