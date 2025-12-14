@@ -1,11 +1,11 @@
 import { CircleCheck, FileText, Pencil } from "lucide-react";
+import { createSearchParamsCache, parseAsString } from "nuqs/server";
 
+// TICKET CONSTANTS
 type TicketStatus = "OPEN" | "IN_PROGRESS" | "DONE";
 
 type TicketIconsType = { [key in TicketStatus]: React.ReactNode };
 type TicketIconstLabel = { [key in TicketStatus]: string };
-
-import { createSearchParamsCache, parseAsString } from "nuqs/server";
 
 export const TICKET_ICONS: TicketIconsType = {
   OPEN: <FileText />,
@@ -19,9 +19,22 @@ export const TICKET_STATUS_LABEL: TicketIconstLabel = {
   DONE: "Done",
 };
 
+// TICKET SEARCH AND SORT PARAMS
+export const searchParser = parseAsString.withDefault("").withOptions({
+  shallow: false,
+  clearOnDefault: true,
+});
+
+export const sortParser = parseAsString
+  .withDefault("createdAt_desc")
+  .withOptions({
+    shallow: false,
+    clearOnDefault: true,
+  });
+
 export const searchParamsCache = createSearchParamsCache({
-  search: parseAsString.withDefault(""),
-  sort: parseAsString.withDefault("newest"),
+  search: searchParser,
+  sort: sortParser,
 });
 
 export type ParsedSearchParams = Awaited<
