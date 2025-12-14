@@ -17,23 +17,24 @@ export const getTickets = async (userId: string | undefined, searchParams: Parse
     const skip = searchParams.page * searchParams.size
     const take = searchParams.size
 
-    const tickets =  await prisma.ticket.findMany({
-        skip,
-        take,
-        where, 
-        orderBy: buildOrderBy(searchParams.sort),
-        include: {
-            user: {
-                select: {
-                    username: true
-                }
+    const [tickets, count] = await prisma.$transaction([
+        prisma.ticket.findMany({
+            skip,
+            take,
+            where, 
+            orderBy: buildOrderBy(searchParams.sort),
+            include: {
+                user: {
+                    select: {
+                        username: true
+                    }
             }
         }
-    })
-
-    const count = await prisma.ticket.count({
+    }),
+    prisma.ticket.count({
         where
     })
+    ])
 
     const metadata = {
         count,
