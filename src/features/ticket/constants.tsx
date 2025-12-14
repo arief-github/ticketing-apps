@@ -1,5 +1,9 @@
 import { CircleCheck, FileText, Pencil } from "lucide-react";
-import { createSearchParamsCache, parseAsString } from "nuqs/server";
+import {
+  createSearchParamsCache,
+  parseAsInteger,
+  parseAsString,
+} from "nuqs/server";
 
 // TICKET CONSTANTS
 type TicketStatus = "OPEN" | "IN_PROGRESS" | "DONE";
@@ -32,9 +36,21 @@ export const sortParser = parseAsString
     clearOnDefault: true,
   });
 
+// TICKET PAGINATION
+export const paginationParser = {
+  page: parseAsInteger.withDefault(0),
+  size: parseAsInteger.withDefault(2),
+};
+
+export const paginationOptions = {
+  shallow: false,
+  clearOnDefault: true,
+};
+
 export const searchParamsCache = createSearchParamsCache({
   search: searchParser,
   sort: sortParser,
+  ...paginationParser,
 });
 
 export type ParsedSearchParams = Awaited<
