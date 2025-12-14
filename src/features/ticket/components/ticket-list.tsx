@@ -36,10 +36,7 @@ export const TicketList = async ({ userId, searchParams }: TicketListProps) => {
       <div className="max-w-[420px] w-full flex gap-x-2">
         <SearchInput placeholder="Search ticket" />
         <div className="w-[200px] shrink-0">
-          <SortSelect
-            defaultValue="createdAt_desc"
-            options={sortOptionsGrouped}
-          />
+          <SortSelect options={sortOptionsGrouped} />
         </div>
       </div>
       {tickets.length > 0 ? (

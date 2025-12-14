@@ -25,10 +25,12 @@ export const searchParser = parseAsString.withDefault("").withOptions({
   clearOnDefault: true,
 });
 
-export const sortParser = parseAsString.withDefault("newest").withOptions({
-  shallow: false,
-  clearOnDefault: true,
-});
+export const sortParser = parseAsString
+  .withDefault("createdAt_desc")
+  .withOptions({
+    shallow: false,
+    clearOnDefault: true,
+  });
 
 export const searchParamsCache = createSearchParamsCache({
   search: searchParser,
