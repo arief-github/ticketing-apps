@@ -4,21 +4,23 @@ import { ParsedSearchParams } from "../constants"
 import buildOrderBy from "./helpers/build-order-by"
 
 export const getTickets = async (userId: string | undefined, searchParams: ParsedSearchParams) => {
-    const skip = searchParams.page * searchParams.size
-    const take = searchParams.size
-
-    return await prisma.ticket.findMany({
-        skip,
-        take,
-        where: {
+    const where = {
             userId,
             ...(typeof searchParams.search === "string" && {
                    title: {
                     contains: searchParams.search,
-                    mode: "insensitive"
+                    mode: "insensitive" as const
                 }
             })
-        },
+        }
+    
+    const skip = searchParams.page * searchParams.size
+    const take = searchParams.size
+
+    const tickets =  await prisma.ticket.findMany({
+        skip,
+        take,
+        where, 
         orderBy: buildOrderBy(searchParams.sort),
         include: {
             user: {
@@ -28,4 +30,19 @@ export const getTickets = async (userId: string | undefined, searchParams: Parse
             }
         }
     })
+
+    const count = await prisma.ticket.count({
+        where
+    })
+
+    const metadata = {
+        count,
+        hasNextPage: count > skip + take,
+        hasPreviousPage: skip > 0
+    }
+
+    return {
+        list: tickets,
+        metadata
+    }
 }

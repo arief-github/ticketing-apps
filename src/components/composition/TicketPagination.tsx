@@ -9,11 +9,26 @@ import {
 
 import Pagination from "../shared/Pagination";
 
-export const TicketPagination = () => {
+type TicketPaginationProps = {
+  paginatedTicketMetadata: {
+    count: number;
+    hasNextPage: boolean;
+  };
+};
+
+export const TicketPagination = ({
+  paginatedTicketMetadata,
+}: TicketPaginationProps) => {
   const [pagination, setPagination] = useQueryStates(
     paginationParser,
     paginationOptions
   );
 
-  return <Pagination pagination={pagination} onPagination={setPagination} />;
+  return (
+    <Pagination
+      pagination={pagination}
+      onPagination={setPagination}
+      paginateMetadata={paginatedTicketMetadata}
+    />
+  );
 };

@@ -13,7 +13,10 @@ type TicketListProps = {
 };
 
 export const TicketList = async ({ userId, searchParams }: TicketListProps) => {
-  const tickets = await getTickets(userId, searchParams);
+  const { list: tickets, metadata: ticketMetadata } = await getTickets(
+    userId,
+    searchParams
+  );
 
   const sortOptionsGrouped = {
     timeSortOptions: [
@@ -47,8 +50,7 @@ export const TicketList = async ({ userId, searchParams }: TicketListProps) => {
       )}
 
       <div className="w-full max-w-[420px]">
-        {/* Render Ticket Pagination */}
-        <TicketPagination />
+        <TicketPagination paginatedTicketMetadata={ticketMetadata} />
       </div>
     </div>
   );
