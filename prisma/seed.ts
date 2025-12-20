@@ -50,8 +50,15 @@ export const initialData: InitialTicket[] = [
     }
 ]
 
+const comments = [
+    { content: "First Comment on DB" },
+    { content: "Second Comment on DB" },
+    { content: "Third Comment on DB" },
+]
+
 // make async function to store initialData into supabase server
 const seed = async () => {
+    await prisma.comment.deleteMany();
     await prisma.user.deleteMany();
     await prisma.ticket.deleteMany();
     
@@ -64,10 +71,18 @@ const seed = async () => {
         }))
     })
     
-    await prisma.ticket.createMany({
+    const dbTickets = await prisma.ticket.createManyAndReturn({
         data: initialData.map(ticket => ({
             ...ticket,
             userId: dbUser[0].id
+        }))
+    })
+
+    await prisma.comment.createMany({
+        data: comments.map((comment) => ({
+            ...comment,
+            userId: dbUser[1].id,
+            ticketId: dbTickets[0].id
         }))
     })
 }

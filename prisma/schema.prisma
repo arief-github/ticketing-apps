@@ -24,6 +24,7 @@ model User {
     sessions            Session[]
     passwordResetTokens PasswordResetToken[]
     tickets             Ticket[]
+    comments            Comment[]
 }
 
 // Defining Model Ticket
@@ -38,6 +39,7 @@ model Ticket {
     deadline  String       @default("2025-10-13")
     userId    String
     user      User         @relation(fields: [userId], references: [id], onDelete: Cascade)
+    comments  Comment[]
 
     @@index([userId])
 }
@@ -58,5 +60,22 @@ model PasswordResetToken {
     user      User     @relation(fields: [userId], references: [id], onDelete: Cascade)
     expiresAt DateTime
 
+    @@index([userId])
+}
+
+model Comment {
+    id        String   @id @default(cuid())
+    createdAt DateTime @default(now())
+    content   String   @db.VarChar(1024)
+
+    // relation many-to-one with tickets
+    ticketId String
+    ticket   Ticket @relation(fields: [ticketId], references: [id], onDelete: Cascade)
+
+    // relation many-to-one with user
+    userId String
+    user   User   @relation(fields: [userId], references: [id], onDelete: SetNull)
+
+    @@index([ticketId])
     @@index([userId])
 }
