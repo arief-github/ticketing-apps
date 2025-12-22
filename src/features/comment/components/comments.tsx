@@ -2,17 +2,17 @@ import { CardFormTicket } from "@/components/composition/CardFormTicket";
 import { getAuth } from "@/features/auth/actions/get-auth";
 import { isOwner } from "@/features/auth/utils/is-owner";
 
-import { getComments } from "../queries/get-comments";
+import { CommentWithMetadata } from "../types";
 import CommentCreateForm from "./comment-create-form";
 import { CommentDeleteButton } from "./comment-delete-button";
 import CommentItem from "./comment-item";
 
 type CommentProps = {
   ticketId: string;
+  comments?: CommentWithMetadata[];
 };
 
-const Comments = async ({ ticketId }: CommentProps) => {
-  const comments = await getComments(ticketId);
+const Comments = async ({ ticketId, comments = [] }: CommentProps) => {
   const { user } = await getAuth();
 
   return (

@@ -2,6 +2,7 @@ import { Prisma } from "@prisma/client";
 import clsx from "clsx";
 import { MoreVertical, Pencil, SquareArrowOutUpRight } from "lucide-react";
 import Link from "next/link";
+import { Suspense } from "react";
 
 import { Button } from "@/components/ui/button";
 import {
@@ -11,9 +12,11 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
+import { Skeleton } from "@/components/ui/skeleton";
 import { getAuth } from "@/features/auth/actions/get-auth";
 import { isOwner } from "@/features/auth/utils/is-owner";
 import { Comments } from "@/features/comment/components/comments";
+import { CommentWithMetadata } from "@/features/comment/types";
 import { ticketEditPath, ticketPath } from "@/paths";
 import { toCurrencyFromCent } from "@/utils/currency";
 
@@ -31,9 +34,14 @@ type TicketItemProps = {
     };
   }>;
   isDetail?: boolean;
+  comments: CommentWithMetadata[];
 };
 
-export const TicketItem = async ({ ticket, isDetail }: TicketItemProps) => {
+export const TicketItem = async ({
+  ticket,
+  isDetail,
+  comments = [],
+}: TicketItemProps) => {
   const { user } = await getAuth();
   const isTicketOwner = isOwner({ user, entity: ticket });
 
@@ -115,7 +123,19 @@ export const TicketItem = async ({ ticket, isDetail }: TicketItemProps) => {
           )}
         </div>
       </div>
-      {isDetail ? <Comments ticketId={ticket.id} /> : null}
+      {isDetail ? (
+        <Suspense
+          fallback={
+            <div className="flex flex-col gap-y-4">
+              <Skeleton className="h-[250px] w-full" />
+              <Skeleton className="h-[80px] ml-8" />
+              <Skeleton className="h-[80px] ml-8" />
+            </div>
+          }
+        >
+          <Comments ticketId={ticket.id} comments={comments} />
+        </Suspense>
+      ) : null}
     </div>
   );
 };
