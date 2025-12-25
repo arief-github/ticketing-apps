@@ -1,20 +1,16 @@
 import { CardFormTicket } from "@/components/composition/CardFormTicket";
-import { getAuth } from "@/features/auth/actions/get-auth";
-import { isOwner } from "@/features/auth/utils/is-owner";
 
-import { getComments } from "../queries/get-comments";
+import { CommentWithMetadata } from "../types";
 import CommentCreateForm from "./comment-create-form";
 import { CommentDeleteButton } from "./comment-delete-button";
 import CommentItem from "./comment-item";
 
 type CommentProps = {
   ticketId: string;
+  comments?: CommentWithMetadata[];
 };
 
-const Comments = async ({ ticketId }: CommentProps) => {
-  const comments = await getComments(ticketId);
-  const { user } = await getAuth();
-
+const Comments = ({ ticketId, comments = [] }: CommentProps) => {
   return (
     <>
       <CardFormTicket
@@ -28,7 +24,7 @@ const Comments = async ({ ticketId }: CommentProps) => {
             key={comment.id}
             comment={comment}
             buttons={[
-              ...(isOwner({ user, entity: comment })
+              ...(comment.isOwner
                 ? [<CommentDeleteButton key="0" id={comment.id} />]
                 : []),
             ]}
