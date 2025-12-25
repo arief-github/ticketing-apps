@@ -1,5 +1,9 @@
-import { CardFormTicket } from "@/components/composition/CardFormTicket";
+"use client";
 
+import { CardFormTicket } from "@/components/composition/CardFormTicket";
+import { Button } from "@/components/ui/button";
+
+import { getComments } from "../queries/get-comments";
 import { CommentWithMetadata } from "../types";
 import CommentCreateForm from "./comment-create-form";
 import { CommentDeleteButton } from "./comment-delete-button";
@@ -11,6 +15,11 @@ type CommentProps = {
 };
 
 const Comments = ({ ticketId, comments = [] }: CommentProps) => {
+  const handleMore = async () => {
+    const result = await getComments(ticketId);
+    console.log(result);
+  };
+
   return (
     <>
       <CardFormTicket
@@ -30,6 +39,12 @@ const Comments = ({ ticketId, comments = [] }: CommentProps) => {
             ]}
           />
         ))}
+      </div>
+
+      <div className="flex flex-col justify-center ml-0">
+        <Button variant="ghost" onClick={handleMore}>
+          Load More
+        </Button>
       </div>
     </>
   );
