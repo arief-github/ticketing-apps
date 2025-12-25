@@ -1,3 +1,5 @@
+"use client";
+
 import { Prisma } from "@prisma/client";
 import clsx from "clsx";
 import { MoreVertical, Pencil, SquareArrowOutUpRight } from "lucide-react";
@@ -11,9 +13,8 @@ import {
   CardHeader,
   CardTitle,
 } from "@/components/ui/card";
-import { getAuth } from "@/features/auth/actions/get-auth";
-import { isOwner } from "@/features/auth/utils/is-owner";
 import { Comments } from "@/features/comment/components/comments";
+import { CommentWithMetadata } from "@/features/comment/types";
 import { ticketEditPath, ticketPath } from "@/paths";
 import { toCurrencyFromCent } from "@/utils/currency";
 
@@ -29,14 +30,12 @@ type TicketItemProps = {
         };
       };
     };
-  }>;
+  }> & { isOwner: boolean };
   isDetail?: boolean;
+  comments?: CommentWithMetadata[];
 };
 
-export const TicketItem = async ({ ticket, isDetail }: TicketItemProps) => {
-  const { user } = await getAuth();
-  const isTicketOwner = isOwner({ user, entity: ticket });
-
+export const TicketItem = ({ ticket, isDetail, comments }: TicketItemProps) => {
   const detailButton = (
     <Button asChild variant="outline" size="icon">
       <Link
@@ -50,7 +49,7 @@ export const TicketItem = async ({ ticket, isDetail }: TicketItemProps) => {
     </Button>
   );
 
-  const editButton = isTicketOwner ? (
+  const editButton = ticket.isOwner ? (
     <Button variant="outline" size="icon" asChild>
       <Link prefetch href={ticketEditPath(ticket.id)}>
         <Pencil className="h-4 w-4" />
@@ -64,7 +63,7 @@ export const TicketItem = async ({ ticket, isDetail }: TicketItemProps) => {
     </Button>
   );
 
-  const moreMenu = isTicketOwner ? (
+  const moreMenu = ticket.isOwner ? (
     <TicketMoreMenu ticket={ticket} trigger={triggerButton} />
   ) : null;
 
@@ -115,7 +114,7 @@ export const TicketItem = async ({ ticket, isDetail }: TicketItemProps) => {
           )}
         </div>
       </div>
-      {isDetail ? <Comments ticketId={ticket.id} /> : null}
+      {isDetail ? <Comments ticketId={ticket.id} comments={comments} /> : null}
     </div>
   );
 };
