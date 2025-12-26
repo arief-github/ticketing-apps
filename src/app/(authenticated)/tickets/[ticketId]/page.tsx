@@ -1,5 +1,6 @@
 import { Breadcrumbs } from "@/components/shared/Breadcrumbs";
 import { Separator } from "@/components/ui/separator";
+import { Comments } from "@/features/comment/components/comments";
 import { getComments } from "@/features/comment/queries/get-comments";
 import { TicketItem } from "@/features/ticket/components/ticket-item";
 import { getTicket } from "@/features/ticket/queries/get-ticket";
@@ -16,7 +17,7 @@ const TicketDetailsPage = async ({
   const ticketPromises = await getTicket(ticketId);
   const commentsPromises = await getComments(ticketId);
 
-  const [ticket, comments] = await Promise.all([
+  const [ticket, paginatedComments] = await Promise.all([
     ticketPromises,
     commentsPromises,
   ]);
@@ -37,7 +38,16 @@ const TicketDetailsPage = async ({
       <Separator />
 
       <div className="flex justify-center animate-fade-in-from-top">
-        <TicketItem ticket={ticket} isDetail={true} comments={comments} />
+        <TicketItem
+          ticket={ticket}
+          isDetail={true}
+          comments={
+            <Comments
+              ticketId={ticket.id}
+              paginatedComments={paginatedComments}
+            />
+          }
+        />
       </div>
     </div>
   );

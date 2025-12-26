@@ -1,5 +1,7 @@
 "use client";
 
+import { useState } from "react";
+
 import { CardFormTicket } from "@/components/composition/CardFormTicket";
 import { Button } from "@/components/ui/button";
 
@@ -11,13 +13,24 @@ import CommentItem from "./comment-item";
 
 type CommentProps = {
   ticketId: string;
-  comments?: CommentWithMetadata[];
+  paginatedComments: {
+    list: CommentWithMetadata[];
+    metadata: { count: number; hasNextPage: boolean };
+  };
 };
 
-const Comments = ({ ticketId, comments = [] }: CommentProps) => {
+const Comments = ({ ticketId, paginatedComments }: CommentProps) => {
+  const [comments, setComments] = useState<CommentWithMetadata[]>(
+    paginatedComments.list
+  );
+
+  const [metadata, setMetadata] = useState(paginatedComments.metadata);
+
   const handleMore = async () => {
-    const result = await getComments(ticketId);
-    console.log(result);
+    const morePaginatedComments = await getComments(ticketId, comments.length);
+    const moreComments = morePaginatedComments.list;
+    setComments([...comments, ...moreComments]);
+    setMetadata(morePaginatedComments.metadata);
   };
 
   return (
@@ -42,9 +55,11 @@ const Comments = ({ ticketId, comments = [] }: CommentProps) => {
       </div>
 
       <div className="flex flex-col justify-center ml-0">
-        <Button variant="ghost" onClick={handleMore}>
-          Load More
-        </Button>
+        {metadata.hasNextPage && (
+          <Button variant="ghost" onClick={handleMore}>
+            Load More
+          </Button>
+        )}
       </div>
     </>
   );

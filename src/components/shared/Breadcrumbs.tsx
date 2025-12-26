@@ -1,5 +1,6 @@
 import { LucideSlash } from "lucide-react";
 import Link from "next/link";
+import { Fragment } from "react";
 
 import {
   Breadcrumb,
@@ -40,14 +41,14 @@ export function Breadcrumbs({ breadcrumbs }: BreadcrumProps) {
           }
 
           return (
-            <>
-              <BreadcrumbItem key={index}>{breadcrumbItem}</BreadcrumbItem>
+            <Fragment key={index}>
+              <BreadcrumbItem>{breadcrumbItem}</BreadcrumbItem>
               {index < breadcrumbs.length - 1 && (
                 <BreadcrumbSeparator>
                   <LucideSlash className="h-4 w-4" />
                 </BreadcrumbSeparator>
               )}
-            </>
+            </Fragment>
           );
         })}
       </BreadcrumbList>
