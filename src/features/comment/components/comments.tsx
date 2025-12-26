@@ -1,10 +1,7 @@
 "use client";
 
-<<<<<<< HEAD
 import { useState } from "react";
 
-=======
->>>>>>> ed2904d (feat: Add 'Load More' button to comments section and enable server-side fetching for comments.)
 import { CardFormTicket } from "@/components/composition/CardFormTicket";
 import { Button } from "@/components/ui/button";
 
@@ -22,7 +19,6 @@ type CommentProps = {
   };
 };
 
-<<<<<<< HEAD
 const Comments = ({ ticketId, paginatedComments }: CommentProps) => {
   const [comments, setComments] = useState<CommentWithMetadata[]>(
     paginatedComments.list
@@ -47,12 +43,6 @@ const Comments = ({ ticketId, paginatedComments }: CommentProps) => {
     if (!comments) return;
 
     setComments((prevComments) => [comments, ...prevComments]);
-=======
-const Comments = ({ ticketId, comments = [] }: CommentProps) => {
-  const handleMore = async () => {
-    const result = await getComments(ticketId);
-    console.log(result);
->>>>>>> ed2904d (feat: Add 'Load More' button to comments section and enable server-side fetching for comments.)
   };
 
   return (
@@ -88,17 +78,11 @@ const Comments = ({ ticketId, comments = [] }: CommentProps) => {
       </div>
 
       <div className="flex flex-col justify-center ml-0">
-<<<<<<< HEAD
         {metadata.hasNextPage && (
           <Button variant="ghost" onClick={handleMore}>
             Load More
           </Button>
         )}
-=======
-        <Button variant="ghost" onClick={handleMore}>
-          Load More
-        </Button>
->>>>>>> ed2904d (feat: Add 'Load More' button to comments section and enable server-side fetching for comments.)
       </div>
     </>
   );
