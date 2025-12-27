@@ -20,6 +20,7 @@ type useConfirmDialogProps = {
   description?: string;
   action: () => Promise<ActionState>;
   trigger: React.ReactElement<{ onClick?: () => void }>;
+  onSuccess?: (actionState: ActionState) => void;
 };
 
 const useConfirmDialog = ({
@@ -27,6 +28,7 @@ const useConfirmDialog = ({
   description = "This action cannot be undone, This will permanently delete your account and remove your data from our server",
   action,
   trigger,
+  onSuccess,
 }: useConfirmDialogProps) => {
   const [isOpen, setIsOpen] = useState<boolean>(false);
   const [actionState, formAction] = useActionState(action, EMPTY_ACTION_STATE);
@@ -34,6 +36,11 @@ const useConfirmDialog = ({
   const dialogTrigger = cloneElement(trigger, {
     onClick: () => setIsOpen((state) => !state),
   });
+
+  const handleSuccess = () => {
+    setIsOpen(false);
+    onSuccess?.(actionState);
+  };
 
   const dialog = (
     <AlertDialog open={isOpen} onOpenChange={setIsOpen}>
@@ -45,7 +52,11 @@ const useConfirmDialog = ({
         <AlertDialogFooter>
           <AlertDialogCancel>Cancel</AlertDialogCancel>
           <AlertDialogAction asChild>
-            <Form action={formAction} actionState={actionState}>
+            <Form
+              action={formAction}
+              actionState={actionState}
+              onSuccess={handleSuccess}
+            >
               <SubmitButton label="Confirm" />
             </Form>
           </AlertDialogAction>
