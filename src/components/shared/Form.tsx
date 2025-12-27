@@ -3,39 +3,47 @@ import { toast } from "sonner";
 import { useActionFeedback } from "@/hooks/use-action-feedback";
 import { ActionState } from "@/utils/to-action-state";
 
-type FormProps = {
-    action: (payload: FormData) => void;
-    actionState: ActionState;
-    children: React.ReactNode;
-    onSuccess?: (actionState: ActionState) => void;
-    onError?: (actionState: ActionState) => void;
-}
+type TData = unknown;
 
-const Form = ({ action, actionState, children, onSuccess, onError }: FormProps) => {
-    useActionFeedback(actionState, {
-        onSuccess: ({ actionState }) => {
-            if (actionState.message) {
-                toast.success(actionState.message)
-            }
+type FormProps<T = TData> = {
+  action: (payload: FormData) => void;
+  actionState: ActionState;
+  children: React.ReactNode;
+  onSuccess?: (actionState: ActionState<T>) => void;
+  onError?: (actionState: ActionState) => void;
+};
 
-            onSuccess?.(actionState)
-        },
-        onError: ({ actionState }) => {
-            if (actionState.message) {
-                toast.error(actionState.message)
-            } else if (Object.keys(actionState.fieldErrors).length > 0) {
-                toast.error("Please check the form for errors")
-            }
+const Form = <T = TData,>({
+  action,
+  actionState,
+  children,
+  onSuccess,
+  onError,
+}: FormProps<T>) => {
+  useActionFeedback(actionState, {
+    onSuccess: ({ actionState }) => {
+      if (actionState.message) {
+        toast.success(actionState.message);
+      }
 
-            onError?.(actionState)
-        }
-    })
+      onSuccess?.(actionState as ActionState<T>);
+    },
+    onError: ({ actionState }) => {
+      if (actionState.message) {
+        toast.error(actionState.message);
+      } else if (Object.keys(actionState.fieldErrors).length > 0) {
+        toast.error("Please check the form for errors");
+      }
 
-    return (
-        <form action={action} className="flex flex-col gap-y-2">
-            {children}
-        </form>
-    )
-}
+      onError?.(actionState);
+    },
+  });
 
-export { Form }
+  return (
+    <form action={action} className="flex flex-col gap-y-2">
+      {children}
+    </form>
+  );
+};
+
+export { Form };
