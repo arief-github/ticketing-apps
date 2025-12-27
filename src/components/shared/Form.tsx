@@ -13,7 +13,7 @@ type FormProps<T = TData> = {
   onError?: (actionState: ActionState) => void;
 };
 
-const Form = <T = TData,>({
+const Form = <T = TData>({
   action,
   actionState,
   children,
