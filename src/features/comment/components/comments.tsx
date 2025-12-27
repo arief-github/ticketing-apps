@@ -44,7 +44,6 @@ const Comments = ({ ticketId, paginatedComments }: CommentProps) => {
 
     setComments((prevComments) => [comments, ...prevComments]);
   };
-
   return (
     <>
       <CardFormTicket
