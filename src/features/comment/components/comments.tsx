@@ -39,12 +39,23 @@ const Comments = ({ ticketId, paginatedComments }: CommentProps) => {
     );
   };
 
+  const handleCreate = (comments: CommentWithMetadata | undefined) => {
+    if (!comments) return;
+
+    setComments((prevComments) => [comments, ...prevComments]);
+  };
+
   return (
     <>
       <CardFormTicket
         title="Create Comment"
         description="A new comment will be created"
-        content={<CommentCreateForm ticketId={ticketId} />}
+        content={
+          <CommentCreateForm
+            ticketId={ticketId}
+            onCreateComment={handleCreate}
+          />
+        }
       />
       <div className="flex flex-col gap-y-2 ml-8">
         {comments.map((comment) => (
