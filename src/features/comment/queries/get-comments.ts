@@ -7,7 +7,8 @@ import { prisma } from "@/lib/prisma"
 export const getComments = async (ticketId: string, cursor?: string) => {
     const { user } = await getAuth();
 
-    const take = 2;
+    const limit = 2;
+    const take = limit + 1;
 
     let where: Record<string, unknown> = { ticketId };
 
@@ -49,17 +50,17 @@ export const getComments = async (ticketId: string, cursor?: string) => {
 
     const [comments, count] = await prisma.$transaction([commentsFindMany, countComment])
 
-    const lastComment = comments.at(-1);
+    const lastComment = comments[limit - 1];
     const metadata = {
         count,
-        hasNextPage: comments.length === take,
+        hasNextPage: comments.length > limit,
         cursor: lastComment
             ? `${lastComment.createdAt.toISOString()}|${lastComment.id}`
             : undefined
     }
 
     return {
-        list: comments.map(comment => ({
+        list: comments.slice(0, limit).map(comment => ({
             ...comment,
             isOwner: isOwner({ user, entity: comment })
         })),
