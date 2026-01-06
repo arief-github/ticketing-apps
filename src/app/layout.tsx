@@ -10,6 +10,8 @@ import Sidebar from "@/app/_navigation/sidebar/components/sidebar";
 import { RedirectToast } from "@/components/shared/RedirectToast";
 import { ThemeProvider } from "@/components/theme/theme-provider";
 
+import { ReactQueryProvider } from "./_providers/react-query/react-query-provider";
+
 const inter = Inter({ subsets: ["latin"] });
 
 export const metadata: Metadata = {
@@ -25,17 +27,19 @@ export default function RootLayout({
   return (
     <html suppressHydrationWarning lang="en">
       <body className={inter.className}>
-        <ThemeProvider>
-          <Navigation />
-          <div className="flex h-screen overflow-hidden border-collapse">
-            <Sidebar />
-            <main className="min-h-screen flex-1 overflow-y-auto overflow-x-hidden py-24 px-8 bg-secondary/20 flex flex-col">
-              <NuqsAdapter>{children}</NuqsAdapter>
-            </main>
-          </div>
-          <Toaster expand />
-          <RedirectToast />
-        </ThemeProvider>
+        <ReactQueryProvider>
+          <ThemeProvider>
+            <Navigation />
+            <div className="flex h-screen overflow-hidden border-collapse">
+              <Sidebar />
+              <main className="min-h-screen flex-1 overflow-y-auto overflow-x-hidden py-24 px-8 bg-secondary/20 flex flex-col">
+                <NuqsAdapter>{children}</NuqsAdapter>
+              </main>
+            </div>
+            <Toaster expand />
+            <RedirectToast />
+          </ThemeProvider>
+        </ReactQueryProvider>
       </body>
     </html>
   );
