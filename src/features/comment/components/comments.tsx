@@ -1,10 +1,13 @@
 "use client";
 
-import { useState } from "react";
+import { useInfiniteQuery, useQueryClient } from "@tanstack/react-query";
+import { useEffect } from "react";
+import { useInView } from "react-intersection-observer";
 
 import { CardFormTicket } from "@/components/composition/CardFormTicket";
-import { Button } from "@/components/ui/button";
+import { PaginatedData } from "@/types/pagination";
 
+import { addCommentInCache, removeCommentInCache } from "../cache";
 import { getComments } from "../queries/get-comments";
 import { CommentWithMetadata } from "../types";
 import CommentCreateForm from "./comment-create-form";
@@ -13,36 +16,50 @@ import CommentItem from "./comment-item";
 
 type CommentProps = {
   ticketId: string;
-  paginatedComments: {
-    list: CommentWithMetadata[];
-    metadata: { count: number; hasNextPage: boolean; cursor?: string };
-  };
+  paginatedComments: PaginatedData<CommentWithMetadata>;
 };
 
 const Comments = ({ ticketId, paginatedComments }: CommentProps) => {
-  const [comments, setComments] = useState<CommentWithMetadata[]>(
-    paginatedComments.list
-  );
+  const queryKey = ["comments", ticketId];
 
-  const [metadata, setMetadata] = useState(paginatedComments.metadata);
+  const { data, fetchNextPage, hasNextPage, isFetchingNextPage } =
+    useInfiniteQuery({
+      queryKey,
+      queryFn: ({ pageParam }) => getComments(ticketId, pageParam),
+      initialPageParam: undefined as string | undefined,
+      getNextPageParam: (lastPage) =>
+        lastPage.metadata.hasNextPage ? lastPage.metadata.cursor : undefined,
+      initialData: {
+        pages: [
+          {
+            list: paginatedComments.list,
+            metadata: paginatedComments.metadata,
+          },
+        ],
+        pageParams: [],
+      },
+    });
 
-  const handleMore = async () => {
-    const morePaginatedComments = await getComments(ticketId, metadata.cursor);
-    const moreComments = morePaginatedComments.list;
-    setComments([...comments, ...moreComments]);
-    setMetadata(morePaginatedComments.metadata);
-  };
+  const comments = data.pages.flatMap((page) => page.list) ?? [];
+
+  const { ref, inView } = useInView();
+
+  const queryClient = useQueryClient();
+
+  useEffect(() => {
+    if (inView && !isFetchingNextPage && hasNextPage) {
+      fetchNextPage();
+    }
+  }, [fetchNextPage, hasNextPage, inView, isFetchingNextPage]);
 
   const handleDelete = (id: string) => {
-    setComments((prevComments) =>
-      prevComments.filter((comment) => comment.id !== id)
-    );
+    removeCommentInCache({ queryClient, queryKey }, { id });
   };
 
   const handleCreate = (comments: CommentWithMetadata | undefined) => {
     if (!comments) return;
 
-    setComments((prevComments) => [comments, ...prevComments]);
+    addCommentInCache({ queryClient, queryKey }, { comment: comments });
   };
 
   return (
@@ -77,11 +94,9 @@ const Comments = ({ ticketId, paginatedComments }: CommentProps) => {
         ))}
       </div>
 
-      <div className="flex flex-col justify-center ml-0">
-        {metadata.hasNextPage && (
-          <Button variant="ghost" onClick={handleMore}>
-            Load More
-          </Button>
+      <div ref={ref}>
+        {!hasNextPage && (
+          <p className="text-right text-xs italic">No more comments.</p>
         )}
       </div>
     </>
