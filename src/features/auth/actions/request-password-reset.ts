@@ -11,6 +11,8 @@ const schema = z.object({
     email: z.string().email('Invalid Email Address')
 })
 
+const environment = process.env.NODE_ENV
+
 export async function requestPasswordReset(_actionState: ActionState, formData: FormData) {
     try {
         const { email } = schema.parse(Object.fromEntries(formData))
@@ -28,7 +30,9 @@ export async function requestPasswordReset(_actionState: ActionState, formData: 
             data: { token, userId: user.id, expiresAt }
         })
 
-        const resetUrl = `${process.env.APP_URL}/password-reset/${token}`
+        const appUrl = environment === "development" ? process.env.APP_URL : process.env.VERCEL_APP_URL 
+
+        const resetUrl = `${appUrl}/password-reset/${token}`
 
         await sendEmail({
             to: email,
