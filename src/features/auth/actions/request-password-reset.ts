@@ -37,7 +37,7 @@ export async function requestPasswordReset(_actionState: ActionState, formData: 
         await sendEmail({
             to: email,
             subject: "Password Reset Request",
-            text: `Reset your password here ${resetUrl}` 
+            url: resetUrl 
         })
 
         return toActionState("SUCCESS", "If that account exists, check your email", formData)
