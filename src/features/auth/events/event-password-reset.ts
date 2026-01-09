@@ -26,10 +26,12 @@ export const passwordResetEvent = inngest.createFunction(
         
         const resetUrl = `${appUrl}/password-reset/${token}`
         
-        await sendEmail({
+        const result = await sendEmail({
             to: email,
             subject: "Password Reset Request",
             url: resetUrl 
         })
+
+        return { event, body: result }
     }
 )
