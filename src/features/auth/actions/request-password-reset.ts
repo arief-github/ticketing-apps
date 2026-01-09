@@ -3,7 +3,7 @@
 import { randomBytes } from "crypto"
 import { z } from 'zod'
 
-import { sendEmail } from "@/lib/email"
+import { inngest } from "@/lib/inngest"
 import { prisma } from "@/lib/prisma"
 import { ActionState, fromErrorToActionState,toActionState } from "@/utils/to-action-state"
 
@@ -11,7 +11,7 @@ const schema = z.object({
     email: z.string().email('Invalid Email Address')
 })
 
-const environment = process.env.NODE_ENV
+
 
 export async function requestPasswordReset(_actionState: ActionState, formData: FormData) {
     try {
@@ -30,14 +30,12 @@ export async function requestPasswordReset(_actionState: ActionState, formData: 
             data: { token, userId: user.id, expiresAt }
         })
 
-        const appUrl = environment === "development" ? process.env.APP_URL : process.env.VERCEL_APP_URL 
-
-        const resetUrl = `${appUrl}/password-reset/${token}`
-
-        await sendEmail({
-            to: email,
-            subject: "Password Reset Request",
-            url: resetUrl 
+        await inngest.send({
+            name: 'app/auth.password-reset-request',
+            data: {
+                email,
+                token
+            }
         })
 
         return toActionState("SUCCESS", "If that account exists, check your email", formData)
