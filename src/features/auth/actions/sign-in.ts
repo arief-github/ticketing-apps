@@ -5,6 +5,7 @@ import { cookies } from "next/headers";
 import { redirect } from "next/navigation";
 import { z } from 'zod'
 
+import { inngest } from "@/lib/inngest";
 import { lucia } from "@/lib/lucia";
 import { prisma } from "@/lib/prisma";
 import { ticketsPath } from "@/paths";
@@ -22,6 +23,15 @@ export const signIn = async (_actionState: ActionState, formData: FormData) => {
         const user = await prisma.user.findUnique({
             where: { email }
         })
+
+        if(!user?.emailVerified) {
+            await inngest.send({
+                name: "app/auth.sign-up",
+                data: {
+                  userId: user!.id,
+                },
+              });
+        }
 
         if(!user) {
             return toActionState("ERROR", "Incorrect email or password", formData)

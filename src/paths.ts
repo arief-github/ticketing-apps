@@ -7,10 +7,12 @@ const signUpPath = (): string => '/sign-up'
 const forgotPasswordPath =  (): string => '/forgot-password'
 const accountProfilePath = (): string => '/account/profile'
 const accountPasswordPath = (): string => '/account/password'
+const emailVerificationPath = (): string => '/email-verification'
 
 export {
     accountPasswordPath,
     accountProfilePath,
+    emailVerificationPath,
     forgotPasswordPath,
     homePath,
     signInPath,

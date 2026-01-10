@@ -1,14 +1,16 @@
 "use server"
 
 import { hash } from '@node-rs/argon2'
+import { Prisma } from '@prisma/client'
 import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
+import { inngest } from '@/lib/inngest'
 import { lucia } from '@/lib/lucia'
 import { prisma } from '@/lib/prisma'
 import { ticketsPath } from '@/paths'
-import { ActionState, fromErrorToActionState } from '@/utils/to-action-state'
+import { ActionState, fromErrorToActionState, toActionState } from '@/utils/to-action-state'
 
 const signUpSchema = z.object({
     username: z.string().min(1).max(191).refine((value) => !value.includes(" "), "Username cannot contain spaces"),
@@ -42,6 +44,13 @@ export const signUp = async (_actionState: ActionState, formData: FormData) => {
             }
         })
 
+        await inngest.send({
+            name: "app/auth.sign-up",
+            data: {
+              userId: user.id,
+            },
+          });
+
         const session = await lucia.createSession(user.id, {})
         const sessionCookie = lucia.createSessionCookie(session.id)
 
@@ -51,6 +60,10 @@ export const signUp = async (_actionState: ActionState, formData: FormData) => {
             sessionCookie.attributes
         )
     } catch (error) {
+        if (error instanceof Prisma.PrismaClientKnownRequestError && error.code === 'P2002') {
+            return toActionState("ERROR", "Either email or username is already in use", formData)
+        }
+
         return fromErrorToActionState(error, formData)
     }
 
