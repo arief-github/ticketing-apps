@@ -6,6 +6,7 @@ import { cookies } from 'next/headers'
 import { redirect } from 'next/navigation'
 import { z } from 'zod'
 
+import { inngest } from '@/lib/inngest'
 import { lucia } from '@/lib/lucia'
 import { prisma } from '@/lib/prisma'
 import { ticketsPath } from '@/paths'
@@ -42,6 +43,13 @@ export const signUp = async (_actionState: ActionState, formData: FormData) => {
                 passwordHash
             }
         })
+
+        await inngest.send({
+            name: "app/auth.sign-up",
+            data: {
+              userId: user.id,
+            },
+          });
 
         const session = await lucia.createSession(user.id, {})
         const sessionCookie = lucia.createSessionCookie(session.id)
