@@ -1,9 +1,11 @@
 "use server"
 
 import { hash } from "@node-rs/argon2";
+import { redirect } from "next/navigation";
 import { z } from "zod";
 
 import { prisma } from "@/lib/prisma";
+import { ticketsPath } from "@/paths";
 import { ActionState, fromErrorToActionState, toActionState } from "@/utils/to-action-state";
 
 const schema = z.object({
@@ -19,8 +21,6 @@ export async function resetPassword(_actionState: ActionState, formData: FormDat
 
         const reset = await prisma.passwordResetToken.findUnique({ where: { token } })
 
-        console.log("Token Record", reset)
- 
         if(!reset || reset.expiresAt < new Date()) {
             return toActionState("ERROR", "Invalid or Expired token", formData)
         }
@@ -35,8 +35,7 @@ export async function resetPassword(_actionState: ActionState, formData: FormDat
             prisma.passwordResetToken.delete({ where: { id: reset.id }})
         ])
 
-        console.log("Transaction Completed")
-
+        await redirect(ticketsPath());
         return toActionState("SUCCESS", "Password successfully reset!", formData)
     } catch(error) {
         console.log("Reset Password Error", error)
