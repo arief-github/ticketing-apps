@@ -31,7 +31,7 @@ async function sendEmailVerification({
   email,
   verificationCode,
 }: EmailVerificationProps) {
-  await resend.emails.send({
+  return await resend.emails.send({
     from: "Email Verification <onboarding@resend.dev>",
     to: email,
     subject: "Email Verification from Ticketing App",
