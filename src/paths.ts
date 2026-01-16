@@ -9,6 +9,7 @@ const accountProfilePath = (): string => '/account/profile'
 const accountPasswordPath = (): string => '/account/password'
 const emailVerificationPath = (): string => '/email-verification'
 const organizationPath = (): string => '/organization'
+const onboardingPath = (): string => '/onboarding'
 
 export {
     accountPasswordPath,
@@ -16,6 +17,7 @@ export {
     emailVerificationPath,
     forgotPasswordPath,
     homePath,
+    onboardingPath,
     organizationPath,
     signInPath,
     signUpPath,
