@@ -33,15 +33,13 @@ export const SubmitButton = ({
 
   return (
     <Button disabled={pending} type="submit" variant={variant} size={size}>
-      {pending && (
+      {pending ? (
         <LoaderCircle
           className={clsx("h-4 w-4 animate-spin", {
             "mr-2": !!label,
           })}
         />
-      )}
-      {label}
-      {icon ? (
+      ) : icon ? (
         <span
           className={clsx({
             "ml-2": !!label,
@@ -52,6 +50,7 @@ export const SubmitButton = ({
           })}
         </span>
       ) : null}
+      {label}
     </Button>
   );
 };

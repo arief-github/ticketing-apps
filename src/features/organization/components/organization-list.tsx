@@ -6,6 +6,8 @@ import {
   LucideTrash,
 } from "lucide-react";
 
+import { OrganizationSwitchButton } from "@/components/shared/OrganizationSwitchButton";
+import { SubmitButton } from "@/components/shared/SubmitButton";
 import Table from "@/components/shared/Table";
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
@@ -17,11 +19,26 @@ const OrganizationList = async () => {
 
   const theadItem = ["ID", "Name", "Joined At", "Members", ""];
 
+  const hasActive = organizations.some((org) => {
+    return org.membershipByUser.isActive;
+  });
+
   const renderTbody = organizations.map((org) => {
+    const isActive = org.membershipByUser.isActive;
+
     const switchButton = (
-      <Button variant="outline" size="icon">
-        <LucideArrowLeftRight className="w-4 h-4" />
-      </Button>
+      <OrganizationSwitchButton
+        organizationId={org.id}
+        trigger={
+          <SubmitButton
+            icon={<LucideArrowLeftRight />}
+            label={!hasActive ? "Activate" : isActive ? "Active" : "Switch"}
+            variant={
+              !hasActive ? "secondary" : isActive ? "default" : "outline"
+            }
+          />
+        }
+      />
     );
 
     const detailButton = (
