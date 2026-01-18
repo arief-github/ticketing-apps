@@ -7,6 +7,7 @@ const EmailVerificationPage = async () => {
   await getAuthOrRedirect({
     checkEmailVerified: false,
     checkOrganization: false,
+    checkActiveOrganization: false,
   });
 
   return (

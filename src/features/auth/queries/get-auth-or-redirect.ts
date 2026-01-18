@@ -24,7 +24,7 @@ export const getAuthOrRedirect = async ({ checkEmailVerified = true, checkOrgani
     
     if(checkOrganization || checkActiveOrganization) {
         const organizations = await getOrganizationByUser()
-        if(!organizations.length && checkOrganization) {
+        if(checkOrganization && !organizations.length) {
             redirect(onboardingPath())
         }
 
