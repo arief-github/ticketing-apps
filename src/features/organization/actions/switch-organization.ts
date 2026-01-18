@@ -10,7 +10,9 @@ import { fromErrorToActionState,toActionState } from "@/utils/to-action-state"
 import { getOrganizationByUser } from "../queries/get-organization-by-user"
 
 export const switchOrganization = async (organizationId: string) => {
-    const { user } = await getAuthOrRedirect()
+    const { user } = await getAuthOrRedirect({
+        checkActiveOrganization: false
+    })
     
     try {
         const organizations = await getOrganizationByUser()
@@ -21,29 +23,30 @@ export const switchOrganization = async (organizationId: string) => {
             return toActionState("ERROR", "Not a member of this organization")
         }
 
-        await prisma.membership.updateMany({
-            where: {
-                userId: user.id,
-                organizationId: {
-                    not: organizationId
-                }
-            },
-            data: {
-                isActive: false
-            }
-        })
-        
-        await prisma.membership.update({
-            where: {
-                membershipId: {
+        await prisma.$transaction([
+            prisma.membership.updateMany({
+                where: {
                     userId: user.id,
-                    organizationId
+                    organizationId: {
+                        not: organizationId
+                    }
+                },
+                data: {
+                    isActive: false
                 }
-            },
-            data: {
-                isActive: true
-            }
-        })
+            }),
+            prisma.membership.update({
+                where: {
+                    membershipId: {
+                        userId: user.id,
+                        organizationId
+                    }
+                },
+                data: {
+                    isActive: true
+                }
+            })
+        ])
     } catch(error) {
         return fromErrorToActionState(error)
     }

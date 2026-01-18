@@ -21,6 +21,7 @@ export const emailVerification = async (_actionState: ActionState, formData: For
     const { user } = await getAuthOrRedirect({
         checkEmailVerified: false,
         checkOrganization: false,
+        checkActiveOrganization: false
     })
    
     try {

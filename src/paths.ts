@@ -9,6 +9,7 @@ const accountProfilePath = (): string => '/account/profile'
 const accountPasswordPath = (): string => '/account/password'
 const emailVerificationPath = (): string => '/email-verification'
 const organizationPath = (): string => '/organization'
+const selectActiveOrganizationPath = (): string => '/onboarding/select-active-organization'
 const organizationCreatePath = (): string => '/organization/create'
 const onboardingPath = (): string => '/onboarding'
 
@@ -21,6 +22,7 @@ export {
     onboardingPath,
     organizationCreatePath,
     organizationPath,
+    selectActiveOrganizationPath,
     signInPath,
     signUpPath,
     ticketEditPath,
