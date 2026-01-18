@@ -3,9 +3,9 @@ import {
   LucideArrowLeftRight,
   LucideArrowUpRightFromSquare,
   LucidePen,
-  LucideTrash,
 } from "lucide-react";
 
+import { OrganizationDeleteButton } from "@/components/shared/OrganizationDeleteButton";
 import { OrganizationSwitchButton } from "@/components/shared/OrganizationSwitchButton";
 import { SubmitButton } from "@/components/shared/SubmitButton";
 import Table from "@/components/shared/Table";
@@ -53,11 +53,7 @@ const OrganizationList = async () => {
       </Button>
     );
 
-    const deleteButton = (
-      <Button variant="destructive" size="icon">
-        <LucideTrash className="w-4 h-4" />
-      </Button>
-    );
+    const deleteButton = <OrganizationDeleteButton organizationId={org.id} />;
 
     const buttons = (
       <div className="gap-x-2 flex">
