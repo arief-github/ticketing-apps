@@ -4,6 +4,7 @@ import {
   LucideArrowUpRightFromSquare,
   LucidePen,
 } from "lucide-react";
+import Link from "next/link";
 
 import { OrganizationDeleteButton } from "@/components/shared/OrganizationDeleteButton";
 import { OrganizationSwitchButton } from "@/components/shared/OrganizationSwitchButton";
@@ -11,10 +12,15 @@ import { SubmitButton } from "@/components/shared/SubmitButton";
 import Table from "@/components/shared/Table";
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { membershipsPath } from "@/paths";
 
 import { getOrganizationByUser } from "../queries/get-organization-by-user";
 
-const OrganizationList = async () => {
+const OrganizationList = async ({
+  limitedAccess,
+}: {
+  limitedAccess: boolean;
+}) => {
   const organizations = await getOrganizationByUser();
 
   const theadItem = ["ID", "Name", "Joined At", "Members", ""];
@@ -43,7 +49,9 @@ const OrganizationList = async () => {
 
     const detailButton = (
       <Button variant="outline" size="icon">
-        <LucideArrowUpRightFromSquare className="w-4 h-4" />
+        <Link href={membershipsPath(org.id)}>
+          <LucideArrowUpRightFromSquare className="w-4 h-4" />
+        </Link>
       </Button>
     );
 
@@ -58,9 +66,12 @@ const OrganizationList = async () => {
     const buttons = (
       <div className="gap-x-2 flex">
         {switchButton}
+
+        {/* {limitedAccess ? null : detailButton}
+         */}
         {detailButton}
-        {editButton}
-        {deleteButton}
+        {limitedAccess ? null : editButton}
+        {limitedAccess ? null : deleteButton}
       </div>
     );
 

@@ -24,7 +24,7 @@ const OrganizationPage = () => {
         }
       />
       <Suspense fallback={<Spinner />}>
-        <OrganizationList />
+        <OrganizationList limitedAccess />
       </Suspense>
     </div>
   );
