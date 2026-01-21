@@ -12,6 +12,7 @@ import { SubmitButton } from "@/components/shared/SubmitButton";
 import Table from "@/components/shared/Table";
 import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
+import { MembershipDeleteButton } from "@/features/memberships/components/membership-delete-button";
 import { membershipsPath } from "@/paths";
 
 import { getOrganizationByUser } from "../queries/get-organization-by-user";
@@ -61,6 +62,13 @@ const OrganizationList = async ({
       </Button>
     );
 
+    const leaveButton = (
+      <MembershipDeleteButton
+        organizationId={org.id}
+        userId={org.membershipByUser.userId}
+      />
+    );
+
     const deleteButton = <OrganizationDeleteButton organizationId={org.id} />;
 
     const buttons = (
@@ -71,6 +79,7 @@ const OrganizationList = async ({
          */}
         {detailButton}
         {limitedAccess ? null : editButton}
+        {leaveButton}
         {limitedAccess ? null : deleteButton}
       </div>
     );
