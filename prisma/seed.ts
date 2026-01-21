@@ -75,18 +75,23 @@ const seed = async () => {
 
     const dbOrganization = await prisma.organization.create({
     data: {
-      name: "Organization 1",
+      name: "Organization Kelas Kakap",
         },
     });
 
-    await prisma.membership.create({    
-        data: {
-        // for debugging purposes
-        // only one user is added to the organization
-        userId: dbUser[1].id,
-        organizationId: dbOrganization.id,
-        isActive: true,
-        },
+    await prisma.membership.createMany({    
+        data: [
+            {
+             userId: dbUser[1].id,
+             organizationId: dbOrganization.id,
+             isActive: true,
+            },
+            {
+             userId: dbUser[0].id,
+             organizationId: dbOrganization.id,
+             isActive: true,
+            }
+        ]
     });
     
     const dbTickets = await prisma.ticket.createManyAndReturn({

@@ -1,10 +1,10 @@
-import { LucideBan, LucideCheck, LucidePen, LucideTrash } from "lucide-react";
+import { LucideBan, LucideCheck } from "lucide-react";
 
 import Table from "@/components/shared/Table";
-import { Button } from "@/components/ui/button";
 import { TableCell, TableRow } from "@/components/ui/table";
 
 import { getMemberships } from "../queries/get-memberships";
+import { MembershipDeleteButton } from "./membership-delete-button";
 
 type MembershipsListProps = {
   organizationId: string;
@@ -18,24 +18,14 @@ export const MembershipsList = async ({
   const theadItem = ["Username", "Email", "Verified Email", ""];
 
   const renderTbody = memberships.map((membership) => {
-    const editButton = (
-      <Button variant="outline" size="icon">
-        <LucidePen className="w-4 h-4" />
-      </Button>
-    );
-
     const deleteButton = (
-      <Button variant="outline" size="icon">
-        <LucideTrash className="w-4 h-4" />
-      </Button>
+      <MembershipDeleteButton
+        organizationId={membership.organizationId}
+        userId={membership.userId}
+      />
     );
 
-    const buttons = (
-      <div className="gap-x-2 flex">
-        {editButton}
-        {deleteButton}
-      </div>
-    );
+    const buttons = <div className="gap-x-2 flex">{deleteButton}</div>;
 
     return (
       <TableRow key={membership.userId}>
