@@ -30,12 +30,18 @@ model Membership {
     organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
     organizationId String
 
-    joinedAt DateTime @default(now())
-    isActive Boolean
+    joinedAt       DateTime       @default(now())
+    isActive       Boolean
+    membershipRole MembershipRole @default(MEMBER)
 
     @@id(name: "membershipId", fields: [userId, organizationId])
     @@index([organizationId])
     @@index([userId])
+}
+
+enum MembershipRole {
+    MEMBER
+    ADMIN
 }
 
 // Define user schema

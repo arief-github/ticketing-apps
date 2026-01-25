@@ -24,7 +24,7 @@ const OrganizationList = async ({
 }) => {
   const organizations = await getOrganizationByUser();
 
-  const theadItem = ["ID", "Name", "Joined At", "Members", ""];
+  const theadItem = ["ID", "Name", "Joined At", "Members", "My Role", ""];
 
   const hasActive = organizations.some((org) => {
     return org.membershipByUser.isActive;
@@ -92,6 +92,7 @@ const OrganizationList = async ({
           {format(org.membershipByUser.joinedAt, "yyyy-MM-dd, HH:mm")}
         </TableCell>
         <TableCell>{org._count.memberships}</TableCell>
+        <TableCell>{org.membershipByUser.membershipRole}</TableCell>
         <TableCell>{buttons}</TableCell>
       </TableRow>
     );

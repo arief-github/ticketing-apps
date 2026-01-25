@@ -15,7 +15,7 @@ export const MembershipsList = async ({
 }: MembershipsListProps) => {
   const memberships = await getMemberships(organizationId);
 
-  const theadItem = ["Username", "Email", "Verified Email", ""];
+  const theadItem = ["Username", "Email", "Verified Email", "Role", ""];
 
   const renderTbody = memberships.map((membership) => {
     const deleteButton = (
@@ -34,6 +34,7 @@ export const MembershipsList = async ({
         <TableCell>
           {membership.user.emailVerified ? <LucideCheck /> : <LucideBan />}
         </TableCell>
+        <TableCell>{membership.membershipRole}</TableCell>
         <TableCell>{buttons}</TableCell>
       </TableRow>
     );
