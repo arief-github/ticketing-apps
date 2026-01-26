@@ -14,6 +14,36 @@ enum TicketStatus {
     DONE
 }
 
+model Organization {
+    id          String       @id @default(cuid())
+    name        String
+    users       User[]
+    createdAt   DateTime     @default(now())
+    updatedAt   DateTime     @updatedAt
+    memberships Membership[]
+}
+
+model Membership {
+    user   User   @relation(fields: [userId], references: [id], onDelete: Cascade)
+    userId String
+
+    organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+    organizationId String
+
+    joinedAt       DateTime       @default(now())
+    isActive       Boolean
+    membershipRole MembershipRole @default(MEMBER)
+
+    @@id(name: "membershipId", fields: [userId, organizationId])
+    @@index([organizationId])
+    @@index([userId])
+}
+
+enum MembershipRole {
+    MEMBER
+    ADMIN
+}
+
 // Define user schema
 model User {
     id            String  @id @default(cuid())
@@ -27,6 +57,9 @@ model User {
     passwordResetTokens     PasswordResetToken[]
     tickets                 Ticket[]
     comments                Comment[]
+    memberships             Membership[]
+    organization            Organization?            @relation(fields: [organizationId], references: [id])
+    organizationId          String?
 }
 
 // Defining Model Ticket

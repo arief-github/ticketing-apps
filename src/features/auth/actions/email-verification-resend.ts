@@ -9,7 +9,9 @@ import { generateEmailVerificationToken } from "../utils/generate-email-verifica
 
 export const emailVerificationResend = async () => {
     const { user } = await getAuthOrRedirect({
-        checkEmailVerified: false
+        checkEmailVerified: false,
+        checkOrganization: false,
+        checkActiveOrganization: false
     })
 
     try {

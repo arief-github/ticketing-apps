@@ -8,6 +8,11 @@ const forgotPasswordPath =  (): string => '/forgot-password'
 const accountProfilePath = (): string => '/account/profile'
 const accountPasswordPath = (): string => '/account/password'
 const emailVerificationPath = (): string => '/email-verification'
+const organizationPath = (): string => '/organization'
+const selectActiveOrganizationPath = (): string => '/onboarding/select-active-organization'
+const organizationCreatePath = (): string => '/organization/create'
+const onboardingPath = (): string => '/onboarding'
+const membershipsPath = (organizationId: string): string => `/organization/${organizationId}/memberships`
 
 export {
     accountPasswordPath,
@@ -15,6 +20,11 @@ export {
     emailVerificationPath,
     forgotPasswordPath,
     homePath,
+    membershipsPath,
+    onboardingPath,
+    organizationCreatePath,
+    organizationPath,
+    selectActiveOrganizationPath,
     signInPath,
     signUpPath,
     ticketEditPath,
