@@ -1,54 +1,65 @@
-import { getAuth } from "@/features/auth/actions/get-auth"
-import { isOwner } from "@/features/auth/utils/is-owner"
-import { prisma } from "@/lib/prisma"
+import { getAuth } from "@/features/auth/actions/get-auth";
+import { isOwner } from "@/features/auth/utils/is-owner";
+import { getActiveOrganization } from "@/features/organization/queries/get-active-organization";
+import { prisma } from "@/lib/prisma";
 
-import { ParsedSearchParams } from "../constants"
-import buildOrderBy from "./helpers/build-order-by"
+import { ParsedSearchParams } from "../constants";
+import buildOrderBy from "./helpers/build-order-by";
 
-export const getTickets = async (userId: string | undefined, searchParams: ParsedSearchParams) => {
-    const { user } = await getAuth();
-    const where = {
-            userId,
-            ...(typeof searchParams.search === "string" && {
-                   title: {
-                    contains: searchParams.search,
-                    mode: "insensitive" as const
-                }
-            })
-        }
-    
-    const skip = searchParams.page * searchParams.size
-    const take = searchParams.size
+export const getTickets = async (
+  userId: string | undefined,
+  byOrganization: boolean,
+  searchParams: ParsedSearchParams,
+) => {
+  const { user } = await getAuth();
+  const activeOrganization = await getActiveOrganization();
+  const where = {
+    userId,
+    ...(typeof searchParams.search === "string" && {
+      title: {
+        contains: searchParams.search,
+        mode: "insensitive" as const,
+      },
+      ...(byOrganization && activeOrganization
+        ? {
+            organizationId: activeOrganization.id,
+          }
+        : {}),
+    }),
+  };
 
-    const tickets =  await prisma.ticket.findMany({
-        skip,
-        take,
-        where, 
-        orderBy: buildOrderBy(searchParams.sort),
-        include: {
-            user: {
-                select: {
-                    username: true
-                }
-            }
-        }
-    })
+  const skip = searchParams.page * searchParams.size;
+  const take = searchParams.size;
 
-    const count = await prisma.ticket.count({
-        where
-    })
+  const tickets = await prisma.ticket.findMany({
+    skip,
+    take,
+    where,
+    orderBy: buildOrderBy(searchParams.sort),
+    include: {
+      user: {
+        select: {
+          username: true,
+        },
+      },
+    },
+  });
 
-    const metadata = {
-        count,
-        hasNextPage: count > skip + take,
-        hasPreviousPage: skip > 0
-    }
+  const count = await prisma.ticket.count({
+    where,
+  });
 
-    return {
-        list: tickets.map(ticket => ({
-            ...ticket,
-            isOwner: isOwner({ user, entity: ticket })
-        })),
-        metadata
-    }
-}
+  const metadata = {
+    count,
+    hasNextPage: count > skip + take,
+    hasPreviousPage: skip > 0,
+  };
+
+  return {
+    list: tickets.map((ticket) => ({
+      ...ticket,
+      isOwner: isOwner({ user, entity: ticket }),
+    })),
+    metadata,
+  };
+};

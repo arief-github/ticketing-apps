@@ -9,13 +9,19 @@ import { TicketItem } from "./ticket-item";
 
 type TicketListProps = {
   userId?: string | undefined;
+  byOrganization?: boolean;
   searchParams: ParsedSearchParams;
 };
 
-export const TicketList = async ({ userId, searchParams }: TicketListProps) => {
+export const TicketList = async ({
+  userId,
+  byOrganization = false,
+  searchParams,
+}: TicketListProps) => {
   const { list: tickets, metadata: ticketMetadata } = await getTickets(
     userId,
-    searchParams
+    byOrganization,
+    searchParams,
   );
 
   const sortOptionsGrouped = {
