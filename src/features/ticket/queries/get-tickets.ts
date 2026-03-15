@@ -14,17 +14,18 @@ export const getTickets = async (
   const { user } = await getAuth();
   const activeOrganization = await getActiveOrganization();
   const where = {
-    userId,
+    ...(byOrganization && activeOrganization
+      ? {
+          organizationId: activeOrganization.id,
+        }
+      : {
+          userId,
+        }),
     ...(typeof searchParams.search === "string" && {
       title: {
         contains: searchParams.search,
         mode: "insensitive" as const,
       },
-      ...(byOrganization && activeOrganization
-        ? {
-            organizationId: activeOrganization.id,
-          }
-        : {}),
     }),
   };
 
