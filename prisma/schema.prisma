@@ -31,6 +31,9 @@ model Membership {
     organization   Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
     organizationId String
 
+    // permission
+    canDeleteTicket Boolean @default(false)
+
     joinedAt       DateTime       @default(now())
     isActive       Boolean
     membershipRole MembershipRole @default(MEMBER)
