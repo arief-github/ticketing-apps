@@ -1,5 +1,6 @@
 import { getAuth } from "@/features/auth/actions/get-auth";
 import { isOwner } from "@/features/auth/utils/is-owner";
+import { getActiveMembership } from "@/features/memberships/queries/get-active-membership";
 import { getActiveOrganization } from "@/features/organization/queries/get-active-organization";
 import { prisma } from "@/lib/prisma";
 
@@ -13,6 +14,7 @@ export const getTickets = async (
 ) => {
   const { user } = await getAuth();
   const activeOrganization = await getActiveOrganization();
+  const activeMembership = await getActiveMembership();
   const where = {
     ...(byOrganization && activeOrganization
       ? {
@@ -60,6 +62,11 @@ export const getTickets = async (
     list: tickets.map((ticket) => ({
       ...ticket,
       isOwner: isOwner({ user, entity: ticket }),
+      permissions: {
+        canDeleteTicket:
+          isOwner({ user, entity: ticket }) &&
+          !!activeMembership?.canDeleteTicket,
+      },
     })),
     metadata,
   };
