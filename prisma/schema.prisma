@@ -32,7 +32,7 @@ model Membership {
     organizationId String
 
     // permission
-    canDeleteTicket Boolean @default(false)
+    canDeleteTicket Boolean @default(true)
 
     joinedAt       DateTime       @default(now())
     isActive       Boolean

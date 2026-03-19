@@ -1,10 +1,10 @@
 import { getAuth } from "@/features/auth/actions/get-auth";
 import { isOwner } from "@/features/auth/utils/is-owner";
-import { getActiveMembership } from "@/features/memberships/queries/get-active-membership";
 import { getActiveOrganization } from "@/features/organization/queries/get-active-organization";
 import { prisma } from "@/lib/prisma";
 
 import { ParsedSearchParams } from "../constants";
+import { getTicketPermission } from "./get-ticket-permission";
 import buildOrderBy from "./helpers/build-order-by";
 
 export const getTickets = async (
@@ -14,7 +14,6 @@ export const getTickets = async (
 ) => {
   const { user } = await getAuth();
   const activeOrganization = await getActiveOrganization();
-  const activeMembership = await getActiveMembership();
   const where = {
     ...(byOrganization && activeOrganization
       ? {
@@ -58,14 +57,18 @@ export const getTickets = async (
     hasPreviousPage: skip > 0,
   };
 
+  const permission = await getTicketPermission({
+    organizationId: activeOrganization?.id,
+    userId,
+  });
+
   return {
     list: tickets.map((ticket) => ({
       ...ticket,
       isOwner: isOwner({ user, entity: ticket }),
       permissions: {
         canDeleteTicket:
-          isOwner({ user, entity: ticket }) &&
-          !!activeMembership?.canDeleteTicket,
+          isOwner({ user, entity: ticket }) && permission?.canDeleteTicket,
       },
     })),
     metadata,
