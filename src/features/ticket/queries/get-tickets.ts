@@ -4,6 +4,7 @@ import { getActiveOrganization } from "@/features/organization/queries/get-activ
 import { prisma } from "@/lib/prisma";
 
 import { ParsedSearchParams } from "../constants";
+import { TicketWithMetadata } from "../types";
 import { getTicketPermission } from "./get-ticket-permission";
 import buildOrderBy from "./helpers/build-order-by";
 
@@ -11,7 +12,14 @@ export const getTickets = async (
   userId: string | undefined,
   byOrganization: boolean,
   searchParams: ParsedSearchParams,
-) => {
+): Promise<{
+  list: TicketWithMetadata[];
+  metadata: {
+    count: number;
+    hasNextPage: boolean;
+    hasPreviousPage: boolean;
+  };
+}> => {
   const { user } = await getAuth();
   const activeOrganization = await getActiveOrganization();
   const where = {
