@@ -5,6 +5,8 @@ import { TableCell, TableRow } from "@/components/ui/table";
 
 import { getMemberships } from "../queries/get-memberships";
 import { MembershipDeleteButton } from "./membership-delete-button";
+import { MembershipMoreMenu } from "./membership-more-menu";
+import { PermissionToggleDropdown } from "./permission-toggle-dropdown";
 
 type MembershipsListProps = {
   organizationId: string;
@@ -15,9 +17,24 @@ export const MembershipsList = async ({
 }: MembershipsListProps) => {
   const memberships = await getMemberships(organizationId);
 
-  const theadItem = ["Username", "Email", "Verified Email", "Role", ""];
+  const theadItem = [
+    "Username",
+    "Email",
+    "Verified Email",
+    "Role",
+    "Can Delete Ticket",
+    "",
+  ];
 
   const renderTbody = memberships.map((membership) => {
+    const moreMenu = (
+      <MembershipMoreMenu
+        organizationId={membership.organizationId}
+        userId={membership.userId}
+        membershipRole={membership.membershipRole}
+      />
+    );
+
     const deleteButton = (
       <MembershipDeleteButton
         organizationId={membership.organizationId}
@@ -25,7 +42,12 @@ export const MembershipsList = async ({
       />
     );
 
-    const buttons = <div className="gap-x-2 flex">{deleteButton}</div>;
+    const buttons = (
+      <div className="gap-x-2 flex">
+        {moreMenu}
+        {deleteButton}
+      </div>
+    );
 
     return (
       <TableRow key={membership.userId}>
@@ -35,6 +57,14 @@ export const MembershipsList = async ({
           {membership.user.emailVerified ? <LucideCheck /> : <LucideBan />}
         </TableCell>
         <TableCell>{membership.membershipRole}</TableCell>
+        <TableCell>
+          <PermissionToggleDropdown
+            userId={membership.userId}
+            organizationId={membership.organizationId}
+            permissionKey="canDeleteTicket"
+            permissionValue={membership.canDeleteTicket}
+          />
+        </TableCell>
         <TableCell>{buttons}</TableCell>
       </TableRow>
     );

@@ -1,5 +1,6 @@
 import {
   LucideBook,
+  LucideBookCopy,
   LucideCircleUser,
   LucideLibrary,
   LucideUser,
@@ -9,6 +10,7 @@ import {
   accountProfilePath,
   homePath,
   organizationPath,
+  ticketOrganizationPath,
   ticketsPath,
 } from "@/paths";
 
@@ -19,6 +21,11 @@ export const sidebarItems: SidebarItem[] = [
     title: "All Tickets",
     href: homePath(),
     icon: <LucideLibrary />,
+  },
+  {
+    title: "Our Tickets",
+    href: ticketOrganizationPath(),
+    icon: <LucideBookCopy />,
   },
   {
     title: "My Tickets",

@@ -20,7 +20,7 @@ import { getOrganizationByUser } from "../queries/get-organization-by-user";
 const OrganizationList = async ({
   limitedAccess,
 }: {
-  limitedAccess: boolean;
+  limitedAccess?: boolean;
 }) => {
   const organizations = await getOrganizationByUser();
 
@@ -32,6 +32,7 @@ const OrganizationList = async ({
 
   const renderTbody = organizations.map((org) => {
     const isActive = org.membershipByUser.isActive;
+    const isAdmin = org.membershipByUser.membershipRole === "ADMIN";
 
     const switchButton = (
       <OrganizationSwitchButton
@@ -71,16 +72,17 @@ const OrganizationList = async ({
 
     const deleteButton = <OrganizationDeleteButton organizationId={org.id} />;
 
+    const placeholder = (
+      <Button disabled size="icon" className="disabled:opacity-0" />
+    );
+
     const buttons = (
       <div className="gap-x-2 flex">
         {switchButton}
-
-        {/* {limitedAccess ? null : detailButton}
-         */}
-        {detailButton}
-        {limitedAccess ? null : editButton}
+        {limitedAccess ? null : isAdmin ? detailButton : placeholder}
+        {limitedAccess ? null : isAdmin ? editButton : placeholder}
         {leaveButton}
-        {limitedAccess ? null : deleteButton}
+        {limitedAccess ? null : isAdmin ? deleteButton : placeholder}
       </div>
     );
 
