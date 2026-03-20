@@ -18,7 +18,7 @@ import { ActionState, EMPTY_ACTION_STATE } from "@/utils/to-action-state";
 type useConfirmDialogProps = {
   title?: string;
   description?: string;
-  action: () => Promise<ActionState>;
+  action: () => Promise<ActionState | undefined>;
   trigger:
     | React.ReactElement<{ onClick?: () => void }>
     | ((isLoading: boolean) => React.ReactElement);
@@ -52,7 +52,7 @@ const useConfirmDialog = ({
 
   const handleSuccess = () => {
     setIsOpen(false);
-    onSuccess?.(actionState);
+    onSuccess?.(actionState!);
   };
 
   const dialog = (
@@ -67,7 +67,7 @@ const useConfirmDialog = ({
           <AlertDialogAction asChild>
             <Form
               action={formAction}
-              actionState={actionState}
+              actionState={actionState!}
               onSuccess={handleSuccess}
             >
               <SubmitButton label="Confirm" />
