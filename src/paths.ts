@@ -10,6 +10,8 @@ const forgotPasswordPath = (): string => "/forgot-password";
 const accountProfilePath = (): string => "/account/profile";
 const accountPasswordPath = (): string => "/account/password";
 const emailVerificationPath = (): string => "/email-verification";
+const invitationsPath = (organizationId: string) =>
+  `/organization/${organizationId}/invitations`;
 const organizationPath = (): string => "/organization";
 const selectActiveOrganizationPath = (): string =>
   "/onboarding/select-active-organization";
@@ -24,6 +26,7 @@ export {
   emailVerificationPath,
   forgotPasswordPath,
   homePath,
+  invitationsPath,
   membershipsPath,
   onboardingPath,
   organizationCreatePath,

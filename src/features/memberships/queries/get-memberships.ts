@@ -1,25 +1,23 @@
-"use server"
-
-import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect"
-import { prisma } from "@/lib/prisma"
+import { getAuthOrRedirect } from "@/features/auth/queries/get-auth-or-redirect";
+import { prisma } from "@/lib/prisma";
 
 export const getMemberships = async (organizationId: string) => {
-    await getAuthOrRedirect()
+  await getAuthOrRedirect();
 
-    const memberships = await prisma.membership.findMany({
-        where: {
-            organizationId,
+  const memberships = await prisma.membership.findMany({
+    where: {
+      organizationId,
+    },
+    include: {
+      user: {
+        select: {
+          email: true,
+          username: true,
+          emailVerified: true,
         },
-        include: {
-            user: {
-                select: {
-                    email: true,
-                    username: true,
-                    emailVerified: true
-                }
-            }
-        }
-    })
+      },
+    },
+  });
 
-    return memberships;
-}
+  return memberships;
+};
