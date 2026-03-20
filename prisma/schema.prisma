@@ -21,6 +21,7 @@ model Organization {
     createdAt   DateTime     @default(now())
     updatedAt   DateTime     @updatedAt
     memberships Membership[]
+    invitations Invitation[]
     tickets     Ticket[]
 }
 
@@ -48,6 +49,21 @@ enum MembershipRole {
     ADMIN
 }
 
+model Invitation {
+    createdAt DateTime @default(now())
+    updatedAt DateTime @updatedAt
+
+    tokenHash String @unique
+    email     String @unique
+
+    organization    Organization @relation(fields: [organizationId], references: [id], onDelete: Cascade)
+    organizationId  String
+    invitedByUser   User?        @relation(fields: [invitedByUserId], references: [id], onDelete: SetNull)
+    invitedByUserId String?
+
+    @@index([organizationId])
+}
+
 // Define user schema
 model User {
     id            String  @id @default(cuid())
@@ -64,6 +80,7 @@ model User {
     memberships             Membership[]
     organization            Organization?            @relation(fields: [organizationId], references: [id])
     organizationId          String?
+    invitations             Invitation[]
 }
 
 // Defining Model Ticket
