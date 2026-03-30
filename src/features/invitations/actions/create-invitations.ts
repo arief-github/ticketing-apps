@@ -4,6 +4,7 @@ import { revalidatePath } from "next/cache";
 import { z } from "zod";
 
 import { getAdminOrRedirect } from "@/features/memberships/queries/get-admin-or-redirect";
+import { inngest } from "@/lib/inngest";
 import { prisma } from "@/lib/prisma";
 import { invitationsPath } from "@/paths";
 import {
@@ -11,6 +12,8 @@ import {
   fromErrorToActionState,
   toActionState,
 } from "@/utils/to-action-state";
+
+import { generateInvitationLink } from "../utils/generate-invitation-link";
 
 const createInvitationSchema = z.object({
   email: z.string().min(1, { message: "Is required" }),
@@ -21,7 +24,7 @@ export const createInvitation = async (
   _actionState: ActionState,
   formData: FormData,
 ) => {
-  await getAdminOrRedirect(organizationId);
+  const { user } = await getAdminOrRedirect(organizationId);
 
   try {
     const { email } = createInvitationSchema.parse({
@@ -44,6 +47,22 @@ export const createInvitation = async (
         "User is already a member of this organization",
       );
     }
+
+    const emailInvitationLink = await generateInvitationLink(
+      user.id,
+      email,
+      organizationId,
+    );
+
+    await inngest.send({
+      name: "app/invitation.created",
+      data: {
+        userId: user.id,
+        organizationId,
+        email,
+        emailInvitationLink,
+      },
+    });
   } catch (error) {
     return fromErrorToActionState(error);
   }

@@ -1,5 +1,6 @@
 import { Resend } from "resend";
 
+import EmailInvitation from "@/components/shared/EmailInvitation";
 import EmailPasswordResetLink from "@/components/shared/EmailPasswordResetLink";
 import EmailVerification from "@/components/shared/EmailVerificationLink";
 
@@ -15,6 +16,14 @@ type EmailVerificationProps = {
   username: string;
   email: string;
   verificationCode: string;
+};
+
+type EmailInvitationProps = Pick<
+  EmailVerificationProps,
+  "email" | "username"
+> & {
+  organizationName: string;
+  emailInvitationLink: string;
 };
 
 async function sendEmail({ to, subject, url }: SendEmailProps) {
@@ -39,4 +48,24 @@ async function sendEmailVerification({
   });
 }
 
-export { sendEmail, sendEmailVerification };
+async function sendEmailInvitation({
+  username,
+  organizationName,
+  email,
+  emailInvitationLink,
+}: EmailInvitationProps) {
+  return await resend.emails.send({
+    from: "Email Invitation <onboarding@resend.dev>",
+    to: email,
+    subject: `Invitation to ${organizationName} from Ticketing App`,
+    react: (
+      <EmailInvitation
+        fromUser={username}
+        fromOrganization={organizationName}
+        url={emailInvitationLink}
+      />
+    ),
+  });
+}
+
+export { sendEmail, sendEmailInvitation, sendEmailVerification };
